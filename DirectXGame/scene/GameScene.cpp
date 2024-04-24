@@ -3,8 +3,8 @@
 #include <cassert>
 
 GameScene::GameScene() {}
-
-GameScene::~GameScene() {}
+//デストラクタ
+GameScene::~GameScene() { delete sprite_; }
 
 void GameScene::Initialize() {
 
@@ -26,6 +26,10 @@ void GameScene::Draw() {
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
+	
+	textureHandle_ = TextureManager::Load("sample.png");	
+	sprite_ = Sprite::Create(textureHandle_, {100, 50});
+
 	/// </summary>
 
 	// スプライト描画後処理
@@ -53,6 +57,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
