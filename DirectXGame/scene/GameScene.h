@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Audio.h"
+#include "Debugcamera.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "Debugcamera.h"
 
 /// <summary>
 /// ゲームシーン
@@ -47,29 +47,29 @@ private: // メンバ変数
 
 	/// <summary>
 	/// ゲームシーン用
-	
-	//テクスチャハンドル
-	uint32_t textureHandle_ = 0; 
-	//スプライトの生成
+
+	// テクスチャハンドル
+	uint32_t textureHandle_ = 0;
+	// スプライトの生成
 	Sprite* sprite_ = nullptr;
 
-	//3Dモデル
+	// 3Dモデル
 	Model* model_ = nullptr;
 
-	//ワールドトランスフォーム
+	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
-	//ビュープロジェクション
+	// ビュープロジェクション
 	ViewProjection viewProjection_;
 
-	//サウンドデータハンドル
+	// サウンドデータハンドル
 	uint32_t soundDataHandle_ = 0;
-	//音声再生ハンドル
+	// 音声再生ハンドル
 	uint32_t voiceHandle_ = 0;
 
-	//ImGuiで値を入力する
+	// ImGuiで値を入力する
 	float inputFloat3[3] = {0, 0, 0};
- 
-	//デバックカメラ
+
+	// デバックカメラ
 	DebugCamera* debugCamera_ = nullptr;
 
 	/// </summary>
