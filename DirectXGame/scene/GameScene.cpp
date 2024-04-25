@@ -19,31 +19,24 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	// ファイル名を指定してテクスチャを読み込む、マリオ
+	// ファイル名を指定してテクスチャを読み込む、02
 	textureHandle_ = TextureManager::Load("sample.png");
-	sprite_ = Sprite::Create(textureHandle_, {100, 50});
+	sprite_ = Sprite::Create(textureHandle_, {100, 5000});
 
-	// 3Dモデルの生成
+	// 3Dモデルの生成02
 	model_ = Model::Create();
 
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
-	// ビュープロジェクションの初期化
+	// ビュープロジェクションの初期化02
 	viewProjection_.Initialize();
 
-	// サウンドデータの読み込み
-	soundDataHandle_ = audio_->LoadWave("fanfare.wav");
-	// 音声再生
-	audio_->PlayWave(soundDataHandle_);
-
-	// 音声再生
-	voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
 
 	// ライン描画が参照するビュープロジェクションを指定する（アドレス渡し）
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
 
 	// デバックカメラの生成
-	debugCamera_ = new DebugCamera(100, 100);
+	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 
 	// 軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -59,12 +52,6 @@ void GameScene::Update() {
 	position.y += 1.0f;
 	sprite_->SetPosition(position);
 	//
-
-	// スペースキーを押した瞬間
-	if (input_->TriggerKey(DIK_SPACE)) {
-		// 音声停止
-		audio_->StopWave(voiceHandle_);
-	}
 
 	// 出バックテキストの表示
 	ImGui::Begin("Debug1");

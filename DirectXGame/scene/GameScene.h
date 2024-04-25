@@ -48,23 +48,18 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	
-	//テクスチャハンドル
+	//テクスチャハンドル02
 	uint32_t textureHandle_ = 0; 
 	//スプライトの生成
 	Sprite* sprite_ = nullptr;
 
-	//3Dモデル
+	//3Dモデル02
 	Model* model_ = nullptr;
 
 	//ワールドトランスフォーム
 	WorldTransform worldTransform_;
-	//ビュープロジェクション
+	//ビュープロジェクション02
 	ViewProjection viewProjection_;
-
-	//サウンドデータハンドル
-	uint32_t soundDataHandle_ = 0;
-	//音声再生ハンドル
-	uint32_t voiceHandle_ = 0;
 
 	//ImGuiで値を入力する
 	float inputFloat3[3] = {0, 0, 0};
