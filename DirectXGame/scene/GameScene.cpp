@@ -11,6 +11,7 @@ GameScene::~GameScene() {
 	delete sprite_;
 	delete model_;
 	delete debugCamera_;
+	delete player_;
 }
 
 void GameScene::Initialize() {
@@ -42,6 +43,16 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetVisible(true);
 	// 軸方向表示が参照するビュープロジェクションを指摘する（アドレス渡し）
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
+
+
+
+
+
+	player_ = new Player();
+	player_->Initialize();
+
+
+
 }
 
 void GameScene::Update() {
@@ -68,6 +79,14 @@ void GameScene::Update() {
 
 	// デバックカメラの更新
 	debugCamera_->Update();
+
+
+
+
+
+	player_->Update();
+
+
 }
 
 void GameScene::Draw() {
@@ -102,6 +121,16 @@ void GameScene::Draw() {
 
 	// 3Dモデル描画　
 	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
+
+
+
+
+
+
+	player_->Draw();
+
+
+
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
