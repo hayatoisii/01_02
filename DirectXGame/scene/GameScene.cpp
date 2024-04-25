@@ -43,7 +43,7 @@ void GameScene::Initialize() {
 	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
 
 	// デバックカメラの生成
-	debugCamera_ = new DebugCamera(100, 100);
+	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
 
 	// 軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
