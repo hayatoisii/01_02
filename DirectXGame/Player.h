@@ -8,7 +8,7 @@ public:
 	/// <summarty>
 	///	初期化
 	/// </summary>
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle, ViewProjection* viewProjection);
 
 	/// <summary>
 	///　更新
@@ -23,10 +23,13 @@ public:
 	private:
 
 		//ワールド変換のデータ
-		WorldTransform morldTransform_;
+		WorldTransform worldTransform_;
 		//モデル
 	    Model* model_ = nullptr;
 		//テクスチャハンドル
 	    uint32_t textureHandle_ = 0u;
+
+		ViewProjection* viewProjection_ = nullptr;
+
 
 };

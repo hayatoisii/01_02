@@ -62,18 +62,7 @@ private: // メンバ変数
 	//ビュープロジェクション02
 	ViewProjection viewProjection_;
 
-	//ImGuiで値を入力する
-	float inputFloat3[3] = {0, 0, 0};
- 
-	//デバックカメラ
-	DebugCamera* debugCamera_ = nullptr;
-
-
-
-
-
-
-
+    //自キャラ
 	Player* player_ = nullptr;
 
 
