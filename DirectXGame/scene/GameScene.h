@@ -8,6 +8,7 @@
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include "Debugcamera.h"
+#include <vector>
 
 /// <summary>
 /// ゲームシーン
@@ -47,6 +48,16 @@ private: // メンバ変数
 
 	/// <summary>
 	/// ゲームシーン用
+	
+	// 3Dモデル02
+	Model* model_ = nullptr;
+
+	std::vector<WorldTransform*> worldTransformBlocks_;
+
+	// ワールドトランスフォーム
+	//WorldTransform worldTransform_;
+
+	
 
 	/// </summary>
 };
