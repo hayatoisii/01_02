@@ -49,13 +49,20 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	
+	//uint32_t texture_ = 0;
+
 	// 3Dモデル02
 	Model* model_ = nullptr;
-
-	std::vector<WorldTransform*> worldTransformBlocks_;
+	                            
+	
 
 	// ワールドトランスフォーム
-	//WorldTransform worldTransform_;
+    WorldTransform worldTransform_;
+
+	ViewProjection viewProjection_;
+
+
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 
 	
 
