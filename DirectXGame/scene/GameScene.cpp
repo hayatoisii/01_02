@@ -59,16 +59,19 @@ void GameScene::Initialize() {
 	// ブロックの生成
 	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
 		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
-			if (i % 2 == 0){
-			worldTransformBlocks_[i][j] = new WorldTransform();
-			worldTransformBlocks_[i][j]->Initialize();
-			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
-			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
-		    }
-	    }
+			if ((i + j) % 2 == 1) {
+				worldTransformBlocks_[i][j] = nullptr;
+			} else {
+
+				worldTransformBlocks_[i][j] = new WorldTransform();
+				worldTransformBlocks_[i][j]->Initialize();
+				worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
+				worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+			}
+		}
     }  
 	//デバックカメラの生成
-	debugCamera_ = new DebugCamera(1280, 740);
+	debugCamera_ = new DebugCamera(1280, 720);
 }
 
 void GameScene::Update() {
@@ -76,12 +79,12 @@ void GameScene::Update() {
 		for (std::vector<WorldTransform*>& worldTransformBlockline : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockline) {
 			    if (!worldTransformBlock)
-				    continue;
-			worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-
-			worldTransformBlock->TransferMatrix();
+				continue;
+				worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
+				worldTransformBlock->TransferMatrix();
+			}
 		}
-	}
+
 
 		debugCamera_->Update();
 
@@ -134,6 +137,8 @@ void GameScene::Draw() {
 
 	for (std::vector<WorldTransform*>& worldTransformBlockline : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockline) {
+			if (!worldTransformBlock)
+			continue;
 			model_->Draw(*worldTransformBlock, viewProjection_); //,texture_
 		}
     }
