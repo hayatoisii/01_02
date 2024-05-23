@@ -23,6 +23,9 @@ GameScene::~GameScene() {
 		}
 	}
 	worldTransformBlocks_.clear();
+
+	delete modelSkydome_;
+
 }
 
 void GameScene::Initialize() {
@@ -40,6 +43,11 @@ void GameScene::Initialize() {
 	// 3Dモデルの生成02
 	model_ = Model::Create();
 
+	skydome_ = new Skydome();
+
+	modelSkydome_ = Model::CreateFromOBJ("sky", true);
+
+	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
 		// 要素数
 	const uint32_t kNumBlockVirtical = 10;
@@ -72,6 +80,7 @@ void GameScene::Initialize() {
     }  
 	//デバックカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
+
 }
 
 void GameScene::Update() {
@@ -139,10 +148,11 @@ void GameScene::Draw() {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockline) {
 			if (!worldTransformBlock)
 			continue;
-			model_->Draw(*worldTransformBlock, viewProjection_); //,texture_
+			//model_->Draw(*worldTransformBlock, viewProjection_); //,texture_
 		}
     }
 
+	skydome_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

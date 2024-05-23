@@ -113,6 +113,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MakeMatrix.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
+    <ClCompile Include="Skydome.cpp" />
     <ClCompile Include="Vector3SRT.cpp" />
     <ClCompile Include="WorldTransformEx.cpp" />
   </ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="math\Vector3.h" />
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="scene\GameScene.h" />
+    <ClInclude Include="Skydome.h" />
     <ClInclude Include="Vector3SRT.h" />
     <ClInclude Include="WorldTransformEx.h" />
   </ItemGroup>

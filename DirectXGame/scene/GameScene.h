@@ -9,6 +9,7 @@
 #include "WorldTransform.h"
 #include "DebugCamera.h"
 #include <vector>
+#include "Skydome.h"
 
 
 /// <summary>
@@ -71,8 +72,10 @@ private: // メンバ変数
 	//デバックカメラ
 	DebugCamera* debugCamera_ = nullptr;
 
-	
-
+	//天球
+	Skydome* skydome_ = nullptr;
+	//3Dモデル
+	Model* modelSkydome_ = nullptr;
 	
 
 	/// </summary>
