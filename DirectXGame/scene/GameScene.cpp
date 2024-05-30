@@ -26,6 +26,8 @@ GameScene::~GameScene() {
 
 	delete modelSkydome_;
 
+	delete mapChipField_;
+
 }
 
 void GameScene::Initialize() {
@@ -48,6 +50,9 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("sky", true);
 
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
+
+
+	/*//////////////////////////////////
 
 		// 要素数
 	const uint32_t kNumBlockVirtical = 10;
@@ -77,10 +82,17 @@ void GameScene::Initialize() {
 				worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
 			}
 		}
-    }  
+    } 
+	/*/////////////////////////
+
+
 	//デバックカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
 
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resources/map.csv");
+
+	GenerateBlocks();
 }
 
 void GameScene::Update() {
@@ -148,7 +160,8 @@ void GameScene::Draw() {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockline) {
 			if (!worldTransformBlock)
 			continue;
-			//model_->Draw(*worldTransformBlock, viewProjection_); //,texture_
+
+			model_->Draw(*worldTransformBlock, viewProjection_); 
 		}
     }
 
@@ -170,4 +183,29 @@ void GameScene::Draw() {
 	Sprite::PostDraw();
 
 #pragma endregion
+}
+
+void GameScene::GenerateBlocks() {
+
+	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
+	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+
+	// 要素数を変更する
+	// 列数を設定（縦方向のブロック数）
+	worldTransformBlocks_.resize(numBlockVirtical);
+	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
+		// １列の要素数を設定（横方向のブロック数）
+		worldTransformBlocks_[i].resize(numBlockHorizontal);
+	}
+
+	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
+		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+			}
+		}
+	}
 }
