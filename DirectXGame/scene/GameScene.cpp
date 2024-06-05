@@ -9,6 +9,7 @@
 #include <Vector3SRT.h>
 
 
+
 GameScene::GameScene() {}
 // デストラクタ
 GameScene::~GameScene() {
@@ -93,6 +94,12 @@ void GameScene::Initialize() {
 	mapChipField_->LoadMapChipCsv("Resources/map.csv");
 
 	GenerateBlocks();
+
+
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(worldTransform_.rotation_.x, worldTransform_.rotation_.y);
+
+
+
 }
 
 void GameScene::Update() {
