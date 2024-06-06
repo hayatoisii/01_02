@@ -32,5 +32,17 @@ public:
 
 		ViewProjection* viewProjection_ = nullptr;
 
+		Vector3 velocity_ = {};
+
+		static inline const float kAcceleration = 0.1f;
+		static inline const float kAtteunation = 0.1f;
+	    static inline const float kLimitRunSpeed = 0.5f;
+
+		enum class LRDirection {
+			kRight,
+			kLeft,
+		};
+
+		LRDirection lrDirection_ = LRDirection::kRight;
 
 };

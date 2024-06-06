@@ -14,9 +14,11 @@ GameScene::GameScene() {}
 // デストラクタ
 GameScene::~GameScene() {
 
-	delete model_;
-	//delete modelBlock_;
+	// delete modelBlock_
+	delete model_;;
 	delete debugCamera_;
+	delete sprite_;
+	delete player_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockline : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockline) {
@@ -33,7 +35,13 @@ GameScene::~GameScene() {
 
 void GameScene::Initialize() {
 
-	// texture_ = TextureManager::Load("cube.jpg");
+	// ファイル名を指定してテクスチャを読み込む、02
+	textureHandle_ = TextureManager::Load("sample.png");
+	sprite_ = Sprite::Create(textureHandle_, {100, 50});
+	// ライン描画が参照するビュープロジェクションを指定する（アドレス渡し）
+	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
+	// 軸方向表示の表示を有効にする
+	AxisIndicator::GetInstance()->SetVisible(true);
 
 	worldTransform_.Initialize();
 
@@ -62,7 +70,10 @@ void GameScene::Initialize() {
 	GenerateBlocks();
 
 
-	//Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex();
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(10,10);
+
+	player_ = new Player();
+	player_->Initialize(model_, &viewProjection_, playerPosition);
 
 
 
@@ -99,6 +110,8 @@ void GameScene::Update() {
 	    
 		    viewProjection_.UpdateMatrix();
 		}
+
+		player_->Update();
 
 }
 
@@ -137,6 +150,8 @@ void GameScene::Draw() {
 			model_->Draw(*worldTransformBlock, viewProjection_); 
 		}
     }
+
+	player_->Draw();
 
 	skydome_->Draw();
 

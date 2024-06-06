@@ -11,6 +11,7 @@
 #include <vector>
 #include "Skydome.h"
 #include "MapChipField.h"
+#include <Player.h>
 
 
 
@@ -56,12 +57,14 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	
-	//uint32_t texture_ = 0;
+	// テクスチャハンドル
+	uint32_t textureHandle_ = 0;
+	// スプライトの生成
+	Sprite* sprite_ = nullptr;
 
 	// 3Dモデル02
 	Model* model_ = nullptr;
 	                            
-	
 
 	// ワールドトランスフォーム
     WorldTransform worldTransform_;
@@ -85,6 +88,8 @@ private: // メンバ変数
 	//マップチップフィールド
 	MapChipField* mapChipField_;
 
+	// 自キャラ
+	Player* player_ = nullptr;
 	
 	//numBlockHorizontal横方向の個数
 
