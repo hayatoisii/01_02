@@ -45,7 +45,7 @@ void GameScene::Initialize() {
 
 	skydome_ = new Skydome();
 
-	modelSkydome_ = Model::CreateFromOBJ("sky", true);
+	modelSkydome_ = Model::CreateFromOBJ("player", true);
 
 	skydome_->Initialize(modelSkydome_, &viewProjection_);
 
