@@ -1,6 +1,5 @@
 #pragma once 
 #include"Model.h"
-#include "ViewProjection.h"
 #include "WorldTransform.h"
 
 class Skydome {
@@ -12,7 +11,8 @@ public:
 	void Draw();
 
 private:
-	WorldTransform worldTransform_;
-	ViewProjection* viewProjection_ = nullptr;
-	Model* model_ = nullptr;
+	WorldTransform S_worldTransform_;
+	ViewProjection* S_viewProjection_ = nullptr;
+	Model* S_model_ = nullptr;
+	uint32_t S_textureHandle_ = 0u;
 };

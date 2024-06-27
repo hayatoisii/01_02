@@ -56,20 +56,6 @@ Matrix4x4 Subtract(const Matrix4x4& mt1, const Matrix4x4& mt2) {
 	return ans;
 }
 
-Matrix4x4 Multiply(const Matrix4x4& mt1, const Matrix4x4& mt2) {
-
-	Matrix4x4 ans = {};
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			for (int k = 0; k < 4; k++) {
-
-				ans.m[i][j] += mt1.m[i][k] * mt2.m[k][j];
-			}
-		}
-	}
-	return ans;
-}
-
 Matrix4x4 Inverse(const Matrix4x4& mt1) {
 	Matrix4x4 ans;
 	float A = 0;

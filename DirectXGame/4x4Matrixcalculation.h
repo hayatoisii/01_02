@@ -6,8 +6,6 @@ Matrix4x4 Add(const Matrix4x4& mt1, const Matrix4x4& mt2);
 
 Matrix4x4 Subtract(const Matrix4x4& mt1, const Matrix4x4& mt2);
 
-Matrix4x4 Multiply(const Matrix4x4& mt1, const Matrix4x4& mt2);
-
 Matrix4x4 Inverse(const Matrix4x4& mt1);
 
 
