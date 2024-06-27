@@ -1,19 +1,17 @@
 #include "Skydome.h"
+
 #include <cassert>
 
 void Skydome::Initialize(Model* model, ViewProjection* viewProjection) {
 	assert(model);
 
-	S_worldTransform_.Initialize();
-	S_model_ = model;
-	S_viewProjection_ = viewProjection;
+	// 3Dモデルの作成
+	Sky_Model_ = model;
+
+	// ワールドトランスフォームの初期化
+	Sky_worldTransform_.Initialize();
+
+	Sky_viewProjection_ = viewProjection;
 }
-
-void Skydome::Update() { S_worldTransform_.TransferMatrix(); }
-
-void Skydome::Draw() {
-
-	S_model_->Draw(S_worldTransform_, *S_viewProjection_);
-
-}
-
+void Skydome::Update() { Sky_worldTransform_.TransferMatrix(); }
+void Skydome::Draw() { Sky_Model_->Draw(Sky_worldTransform_, *Sky_viewProjection_); }

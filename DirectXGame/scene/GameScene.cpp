@@ -1,29 +1,24 @@
 #include "GameScene.h"
-#include "AxisIndicator.h"
-#include "ImGuiManager.h"
-#include "PrimitiveDrawer.h"
 #include "TextureManager.h"
 #include <cassert>
-#include <MakeMatrix.h>
-#include <WorldTransform.h>
-#include <Vector3SRT.h>
-
-
 
 GameScene::GameScene() {}
-// デストラクタ
-GameScene::~GameScene() {
 
+GameScene::~GameScene() {
 	delete debugCamera_;
-	delete player_;
-	delete skydome_;
+	delete player;
+	delete skydome;
 	delete mapChipField_;
+	// 3Dモデル削除
+
 	delete modelPlayer;
-	delete Block_;
+
+	delete modelBlock_;
+
 	delete modelSkydome_;
 
-	for (std::vector<WorldTransform*>& worldTransformBlockline : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockline) {
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
 		}
 	}
@@ -31,21 +26,23 @@ GameScene::~GameScene() {
 }
 
 void GameScene::GenerateBlocks() {
-
+	// 要素数
 	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVirtical();
 	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
 
 	// 要素数を変更する
-	// 列数を設定（縦方向のブロック数）
+	// 列数を設定(縦方向のブロック数)
 	worldTransformBlocks_.resize(numBlockVirtical);
 	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
-		// １列の要素数を設定（横方向のブロック数）
+		// 1列の要素数を指定(横方向のブロック数)
 		worldTransformBlocks_[i].resize(numBlockHorizontal);
 	}
 
 	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
 		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
+
 			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
+
 				WorldTransform* worldTransform = new WorldTransform();
 				worldTransform->Initialize();
 				worldTransformBlocks_[i][j] = worldTransform;
@@ -61,75 +58,107 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	/*-------------------
+	       　テクスチャー
+	    -------------------*/
 
-    Block_ = Model::Create();
-
-	skydome_ = new Skydome();
-
-	modelSkydome_ = Model::CreateFromOBJ("sky", true);
-
-	skydome_->Initialize(modelSkydome_, &viewProjection_);
+	modelBlock_ = Model::Create();
+	/*--------------
+	* ワールド・ビュー
+	--------------*/
 
 	viewProjection_.farZ = 1145;
 
 	viewProjection_.Initialize();
 
-	//デバックカメラの生成
-	debugCamera_ = new DebugCamera(1280, 720);
+	/*---------
+	  SkyDome
+	---------*/
 
+	// SkyDome作成
+	skydome = new Skydome;
+
+	modelSkydome_ = Model::CreateFromOBJ("sakaban", true);
+
+	skydome->Initialize(modelSkydome_, &viewProjection_);
+	/*---------
+	* Map
+	--------*/
+	// Mapの生成
 	mapChipField_ = new MapChipField;
-	mapChipField_->LoadMapChipCsv("Resources/map.csv");
+	// Mapのよみこみ
+	mapChipField_->LoadMapChipCsv("Resources/block.csv");
 
+	/*---------
+	* Chara
+	--------*/
 
-	player_ = new Player;
+	// 自キャラの生成
+	player = new Player;
 
 	modelPlayer = Model::CreateFromOBJ("player", true);
 
-	playerPosition_ = mapChipField_->GetMapChipPositionByIndex(10,10);
+	// 座標をマップチップ番号で指定
+	playerPos = mapChipField_->GetMapChipPositionByIndex(9, 9);
 
-	player_ = new Player();
-	player_->Initialize(modelPlayer, &viewProjection_, playerPosition_);
+	// 自キャラの初期化
+	player->Initialize(modelPlayer, &viewProjection_, playerPos);
 
+	/*-----------
+	 DEBUG_CAMERA
+	-----------*/
+	debugCamera_ = new DebugCamera(1280, 720);
+	/*---------
+	* BLOCK
+	--------*/
 	GenerateBlocks();
-
 }
 
 void GameScene::Update() {
 
+	/*-----------
+	DebugCamera
+	-----------*/
+
+	debugCamera_->Update();
+#ifdef _DEBUG
+
+	if (input_->TriggerKey(DIK_SPACE)) {
+		isDebugCameraActive_ = true;
+	}
+#endif
+
+	if (isDebugCameraActive_) {
 
 		debugCamera_->Update();
+		viewProjection_.matView = debugCamera_->GetView();
+		viewProjection_.matProjection = debugCamera_->GetProjection();
 
-		#ifdef _DEBUG
-	    if (input_->TriggerKey(DIK_K)) {
-		    isDebugCamerActive_ = !isDebugCamerActive_;
-		}
-		#endif
+		//
+		viewProjection_.TransferMatrix();
+	} else {
+		//
+		viewProjection_.UpdateMatrix();
+	}
 
-		if (isDebugCamerActive_) {
+	/*----------
+	     3D
+	----------*/
+	// 自キャラの更新
+	player->Update();
 
-		    viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		    viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-		        
-		        viewProjection_.TransferMatrix();
-	    } else {
-	    
-		    viewProjection_.UpdateMatrix();
-		}
+	skydome->Update();
 
-		player_->Update();
-
-		skydome_->Update();
-
-	for (std::vector<WorldTransform*>& worldTransformBlockline : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockline) {
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
-			    continue;
-			    //worldTransformBlock->UpdateMatarix();
-			    worldTransformBlock->matWorld_ = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
-			    worldTransformBlock->TransferMatrix();
-		    }
-	    }
+				continue;
 
+			worldTransformBlock->UpdateMatrix();
+
+			worldTransformBlock->TransferMatrix();
+		}
+	}
 }
 
 void GameScene::Draw() {
@@ -144,6 +173,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
+	///
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -158,19 +188,23 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+	///
 
+	/*-----------
+	     3D
+	-----------*/
+	// 自キャラ
+	player->Draw();
+
+	skydome->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			if (!worldTransformBlock)
-			continue;
-			Block_->Draw(*worldTransformBlock, viewProjection_);
+				continue;
+			modelBlock_->Draw(*worldTransformBlock, viewProjection_);
 		}
 	}
-
-	player_->Draw();
-
-	skydome_->Draw();
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

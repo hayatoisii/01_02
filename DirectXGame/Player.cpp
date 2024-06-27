@@ -50,8 +50,8 @@ void Player::Update() {
 					velocity_.x *= (1.0f - kAttenuation);
 				}
 
-				if (lrDirection_ != LRDirection::kRight) {
-					lrDirection_ = LRDirection::kRight;
+				if (lrdDirection_ != LRDirection::kRight) {
+					lrdDirection_ = LRDirection::kRight;
 					// 旋回開始時の角度を記録する
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					// 旋回タイマーに時間を設定する
@@ -65,8 +65,8 @@ void Player::Update() {
 					velocity_.x *= (1.0f - kAttenuation);
 				}
 
-				if (lrDirection_ != LRDirection::kLeft) {
-					lrDirection_ = LRDirection::kLeft;
+				if (lrdDirection_ != LRDirection::kLeft) {
+					lrdDirection_ = LRDirection::kLeft;
 					// 旋回開始時の角度を記録する
 					turnFirstRotationY_ = worldTransform_.rotation_.y;
 					// 旋回タイマーに時間を設定する
@@ -80,11 +80,11 @@ void Player::Update() {
 
 			// 最大速度制限
 			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
-
 		} else {
 			velocity_.x *= (1.0f - kAttenuation);
 		}
 		if (Input::GetInstance()->PushKey(DIK_W)) {
+			// jump
 			velocity_.x += 0;
 			velocity_.y += kJumpAcceleration;
 			velocity_.z += 0;
@@ -95,6 +95,7 @@ void Player::Update() {
 		velocity_.x += 0;
 		velocity_.y += -kGravityAcceleration;
 		velocity_.z += 0;
+		// 落下速度制限
 		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 	}
 
@@ -141,15 +142,18 @@ void Player::Update() {
 
 		};
 		// 状態に応じた目標角度を取得する
-		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
+		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrdDirection_)];
 		// 自キャラ角度を設定する
 		worldTransform_.rotation_.y = lerp(turnFirstRotationY_, destinationRotationY, turnTimer_ / kTimeTurn);
 	}
 
-	// 移動
+		// 移動
 	worldTransform_.translation_.x += velocity_.x;
+	worldTransform_.translation_.y += velocity_.y;
+	worldTransform_.translation_.z += velocity_.z;
+
 	// 行列計算
-	worldTransform_.UpdateMatarix();
+	worldTransform_.UpdateMatrix();
 	ImGui::Begin("Debug");
 	ImGui::Text("A D : idou");
 	ImGui::Text("W : Jump");

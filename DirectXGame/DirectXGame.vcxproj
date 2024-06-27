@@ -118,6 +118,7 @@
     <ClCompile Include="Skydome.cpp" />
     <ClCompile Include="Vector3SRT.cpp" />
     <ClCompile Include="WorldTransformEx.cpp" />
+    <ClCompile Include="WorldTransform_MT.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\ImGuiManager.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Skydome.h" />
     <ClInclude Include="Vector3SRT.h" />
     <ClInclude Include="WorldTransformEx.h" />
+    <ClInclude Include="WorldTransform_MT.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\shaders\TerrainPS.hlsl">
