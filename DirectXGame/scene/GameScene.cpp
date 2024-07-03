@@ -83,7 +83,7 @@ void GameScene::Initialize() {
 	// SkyDome作成
 	skydome = new Skydome;
 
-	modelSkydome_ = Model::CreateFromOBJ("sakaban", true);
+	modelSkydome_ = Model::CreateFromOBJ("player", true);
 
 	skydome->Initialize(modelSkydome_, &viewProjection_);
 	/*---------
