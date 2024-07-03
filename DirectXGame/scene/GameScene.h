@@ -6,12 +6,14 @@
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
-#include "WorldTransform.h"
-#include "DebugCamera.h"
-#include <vector>
-#include "Skydome.h"
-#include "MapChipField.h"
 
+#include "Skydome.h"
+
+#include "Player.h"
+#include <DebugCamera.h>
+
+#include <MapChipField.h>
+#include <vector>
 
 /// <summary>
 /// ゲームシーン
@@ -43,8 +45,9 @@ public: // メンバ関数
 	/// 描画
 	/// </summary>
 	void Draw();
-
-
+	/// <summary>
+	/// 表示ブロックの生成
+	/// </summary>
 	void GenerateBlocks();
 
 private: // メンバ変数
@@ -54,38 +57,42 @@ private: // メンバ変数
 
 	/// <summary>
 	/// ゲームシーン用
-	
-	//uint32_t texture_ = 0;
+	/// </summary>
 
-	// 3Dモデル02
-	Model* model_ = nullptr;
-	                            
-	
-
-	// ワールドトランスフォーム
-    WorldTransform worldTransform_;
-
-	ViewProjection viewProjection_;
-
-
-	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
-
-
-	bool isDebugCamerActive_ = false;
-
-	//デバックカメラ
+	/*-----------
+	DebugCamera
+	-----------*/
+	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 
-	//天球
-	Skydome* skydome_ = nullptr;
-	//3Dモデル
+	// std::unique_ptr<Model> model_;
+
+	// model_ = std::make_unique<Model>();
+	// osusume
+	/*-----------
+	　 キャラクタ
+	-----------*/
+	Player* player = nullptr;
+	Vector3 playerPos = {};
+
+	Skydome* skydome = nullptr;
+
+	MapChipField* mapChipField_ = nullptr;
+
+	/*------------
+	テクスチャ&モデル
+	------------*/
+
+	Model* modelPlayer = nullptr;
+
+	Model* modelBlock_ = nullptr;
+
 	Model* modelSkydome_ = nullptr;
 
-	//マップチップフィールド
-	MapChipField* mapChipField_;
+	/*--------------
+	* ワールド・ビュー
+	--------------*/
 
-	
-	//numBlockHorizontal横方向の個数
-
-	/// </summary>
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+	ViewProjection viewProjection_;
 };

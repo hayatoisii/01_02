@@ -1,9 +1,10 @@
-#pragma once 
-#include"Model.h"
-#include "ViewProjection.h"
+#pragma
+
+#include "Model.h"
 #include "WorldTransform.h"
 
 class Skydome {
+
 public:
 	void Initialize(Model* model, ViewProjection* viewProjection);
 
@@ -12,7 +13,13 @@ public:
 	void Draw();
 
 private:
-	WorldTransform worldTransform_;
-	ViewProjection* viewProjection_ = nullptr;
-	Model* model_ = nullptr;
+	WorldTransform Sky_worldTransform_;
+
+	Model* Sky_Model_ = nullptr;
+
+	// テクスチャーハンドル
+	uint32_t Sky_textureHandle_ = 0u;
+
+	// ビューポート
+	ViewProjection* Sky_viewProjection_ = nullptr;
 };
