@@ -163,7 +163,5 @@ void Player::Draw() {
 	model_->Draw(worldTransform_, *viewProjection_);
 }
 float lerp(float start, float end, float t) {
-	float result = {};
-	result = (1.0f - t) * start + t * end;
-	return result;
+	return start + t * (end - start); // 修正された補間公式
 }
