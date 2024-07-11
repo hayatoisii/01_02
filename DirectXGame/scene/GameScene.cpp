@@ -83,7 +83,7 @@ void GameScene::Initialize() {
 	// SkyDome作成
 	skydome = new Skydome;
 
-	modelSkydome_ = Model::CreateFromOBJ("player", true);
+	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
 
 	skydome->Initialize(modelSkydome_, &viewProjection_);
 	/*---------
@@ -92,7 +92,7 @@ void GameScene::Initialize() {
 	// Mapの生成
 	mapChipField_ = new MapChipField;
 	// Mapのよみこみ
-	mapChipField_->LoadMapChipCsv("Resources/block.csv");
+	mapChipField_->LoadMapChipCsv("Resources/map.csv");
 
 	/*---------
 	* Chara
