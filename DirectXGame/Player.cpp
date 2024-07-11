@@ -82,21 +82,34 @@ void Player::Update() {
 			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
 
 		} else {
+			// 非入力時は移動減衰をかける
 			velocity_.x *= (1.0f - kAttenuation);
 		}
-		if (Input::GetInstance()->PushKey(DIK_W)) {
+
+		if (Input::GetInstance()->PushKey(DIK_UP)) {
+			// ジャンプ初速
+			//			velocity_ += Vector3(0, kJumpAcceleration, 0);
 			velocity_.x += 0;
 			velocity_.y += kJumpAcceleration;
 			velocity_.z += 0;
 		}
 
 	} else {
-
+		// 落下速度
+		//		velocity_ += Vector3(0, -kGravityAcceleration, 0);
 		velocity_.x += 0;
 		velocity_.y += -kGravityAcceleration;
 		velocity_.z += 0;
+		// 落下速度制限
 		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 	}
+
+	// 左右の自キャラ角度テーブル
+	float destinationRotationYTable[] = {std::numbers::pi_v<float> / 2.0f, std::numbers::pi_v<float> * 3.0f / 2.0f};
+	// 状態に応じた角度を取得する
+	float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrdDirection_)];
+	// 自キャラの角度を設定する
+	worldTransform_.rotation_.y = destinationRotationY;
 
 	// 着地フラグ
 	bool landing = false;
@@ -105,12 +118,12 @@ void Player::Update() {
 	// 下降中？
 	if (velocity_.y < 0) {
 		// Y座標が地面以下になったら着地
-		if (worldTransform_.translation_.y <= 1.0f) {
+		if (worldTransform_.translation_.y <= 2.0f) {
 			landing = true;
 		}
 	}
 
-	// 設置判定
+	// 接地判定
 	if (onGround_) {
 		// ジャンプ開始
 		if (velocity_.y > 0.0f) {
@@ -120,42 +133,29 @@ void Player::Update() {
 	} else {
 		// 着地
 		if (landing) {
-			// めり込み
-			worldTransform_.translation_.y = 1.0f;
+			// めり込み排斥
+			worldTransform_.translation_.y = 2.0f;
 			// 摩擦で横方向速度が減衰する
-			velocity_.x *= (1.0f - kAttenuationLanding);
-			// 下方向速度リセット
+			velocity_.x *= (1.0f - kAttenuation);
+			// 下方向速度をリセット
 			velocity_.y = 0.0f;
-			// 設置状態に移行
+			// 接地状態に移行
 			onGround_ = true;
 		}
 	}
 
-	if (turnTimer_ > 0.0f) {
-
-		turnTimer_ -= static_cast<float>(1) / 60;
-
-		// 左右の自キャラ角度テーブル
-		float destinationRotationYTable[] = {
-		    std::numbers::pi_v<float> / 2.0f, std::numbers::pi_v<float> * 3.0f / 2.0f
-
-		};
-		// 状態に応じた目標角度を取得する
-		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrdDirection_)];
-		// 自キャラ角度を設定する
-		worldTransform_.rotation_.y = lerp(turnFirstRotationY_, destinationRotationY, turnTimer_ / kTimeTurn);
-	}
 
 	// 移動
 	worldTransform_.translation_.x += velocity_.x;
+	worldTransform_.translation_.y += velocity_.y;
+	worldTransform_.translation_.z += velocity_.z;
+
 	// 行列計算
 	worldTransform_.UpdateMatarix();
-	ImGui::Begin("Debug");
-	ImGui::Text("A D : idou");
-	ImGui::Text("W : Jump");
-	ImGui::Text("playerPos.x %f", worldTransform_.translation_.x);
-	ImGui::Text("playerPos.y %f", worldTransform_.translation_.y);
-	ImGui::End();
+	// 行列を定数バッファに転送
+	worldTransform_.TransferMatrix();
+
+
 }
 // 描画
 void Player::Draw() {
