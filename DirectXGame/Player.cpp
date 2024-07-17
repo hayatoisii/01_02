@@ -1,9 +1,7 @@
 #define NOMINMAX
 #include <Player.h>
-
 #include <algorithm>
 #include <cassert>
-
 #include <ImGuiManager.h>
 
 float EaseInOut(float x1, float x2, float t);

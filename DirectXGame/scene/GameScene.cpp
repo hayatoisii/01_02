@@ -63,22 +63,13 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	/*-------------------
-	       　テクスチャー
-	    -------------------*/
 
 	modelBlock_ = Model::Create();
-	/*--------------
-	* ワールド・ビュー
-	--------------*/
 
+	//ワールド・ビュー
 	viewProjection_.farZ = 1145;
 
 	viewProjection_.Initialize();
-
-	/*---------
-	  SkyDome
-	---------*/
 
 	// SkyDome作成
 	skydome = new Skydome;
@@ -86,17 +77,12 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
 
 	skydome->Initialize(modelSkydome_, &viewProjection_);
-	/*---------
-	* Map
-	--------*/
+
 	// Mapの生成
 	mapChipField_ = new MapChipField;
 	// Mapのよみこみ
 	mapChipField_->LoadMapChipCsv("Resources/map.csv");
 
-	/*---------
-	* Chara
-	--------*/
 
 	// 自キャラの生成
 	player = new Player;
@@ -109,21 +95,15 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player->Initialize(modelPlayer, &viewProjection_, playerPos);
 
-	/*-----------
-	 DEBUG_CAMERA
-	-----------*/
+
 	debugCamera_ = new DebugCamera(1280, 720);
-	/*---------
-	* BLOCK
-	--------*/
+
 	GenerateBlocks();
 }
 
 void GameScene::Update() {
 
-	/*-----------
-	DebugCamera
-	-----------*/
+
 
 	debugCamera_->Update();
 #ifdef _DEBUG
@@ -145,9 +125,7 @@ void GameScene::Update() {
 		viewProjection_.UpdateMatrix();
 	}
 
-	/*----------
-	     3D
-	----------*/
+
 	// 自キャラの更新
 	player->Update();
 
@@ -194,9 +172,7 @@ void GameScene::Draw() {
 	/// </summary>
 	///
 
-	/*-----------
-	     3D
-	-----------*/
+
 	// 自キャラ
 	player->Draw();
 

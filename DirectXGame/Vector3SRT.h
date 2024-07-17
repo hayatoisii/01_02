@@ -1,8 +1,7 @@
+#pragma once
 #include "Matrix4x4.h"
 #include "Vector3.h"
-#pragma once
 #include <assert.h>
-
 #include <cmath>
 #include <stdio.h>
 

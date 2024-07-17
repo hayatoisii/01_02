@@ -1,5 +1,4 @@
 #pragma
-
 #include "Model.h"
 #include "WorldTransform.h"
 

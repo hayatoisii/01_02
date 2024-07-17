@@ -1,17 +1,13 @@
 #pragma once
-
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
-
 #include "Skydome.h"
-
 #include "Player.h"
 #include <DebugCamera.h>
-
 #include <MapChipField.h>
 #include <vector>
 
@@ -59,19 +55,11 @@ private: // メンバ変数
 	/// ゲームシーン用
 	/// </summary>
 
-	/*-----------
-	DebugCamera
-	-----------*/
+
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 
-	// std::unique_ptr<Model> model_;
 
-	// model_ = std::make_unique<Model>();
-	// osusume
-	/*-----------
-	　 キャラクタ
-	-----------*/
 	Player* player = nullptr;
 	Vector3 playerPos = {};
 
@@ -79,9 +67,6 @@ private: // メンバ変数
 
 	MapChipField* mapChipField_ = nullptr;
 
-	/*------------
-	テクスチャ&モデル
-	------------*/
 
 	Model* modelPlayer = nullptr;
 
@@ -89,10 +74,8 @@ private: // メンバ変数
 
 	Model* modelSkydome_ = nullptr;
 
-	/*--------------
-	* ワールド・ビュー
-	--------------*/
 
+	//ワールドビュー
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 	ViewProjection viewProjection_;
 };
