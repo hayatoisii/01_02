@@ -1,3 +1,5 @@
+#pragma once
+
 #include "GameScene.h"
 #include "AxisIndicator.h"
 #include "ImGuiManager.h"
@@ -7,6 +9,7 @@
 #include <MakeMatrix.h>
 #include <WorldTransform.h>
 #include <Vector3SRT.h>
+
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
@@ -14,13 +17,10 @@ GameScene::~GameScene() {
 	delete player;
 	delete skydome;
 	delete mapChipField_;
-	// 3Dモデル削除
-
 	delete modelPlayer;
-
 	delete modelBlock_;
-
 	delete modelSkydome_;
+	delete cameraController_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -66,9 +66,7 @@ void GameScene::Initialize() {
 
 	modelBlock_ = Model::Create();
 
-	//ワールド・ビュー
-	viewProjection_.farZ = 1145;
-
+	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
 	// SkyDome作成
@@ -95,17 +93,20 @@ void GameScene::Initialize() {
 	// 自キャラの初期化
 	player->Initialize(modelPlayer, &viewProjection_, playerPos);
 
-
 	debugCamera_ = new DebugCamera(1280, 720);
 
 	GenerateBlocks();
+
+	cameraController_ = new CameraController();
+	cameraController_->Initialize();
+	cameraController_->setTarget(player);
+	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
+	cameraController_->SetMovableArea(cameraArea);
+	cameraController_->Reset();
 }
 
 void GameScene::Update() {
 
-
-
-	debugCamera_->Update();
 #ifdef _DEBUG
 
 	if (input_->TriggerKey(DIK_SPACE)) {
@@ -114,22 +115,14 @@ void GameScene::Update() {
 #endif
 
 	if (isDebugCameraActive_) {
-
+		debugCamera_->Update();
 		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
 
-		//
-		viewProjection_.TransferMatrix();
 	} else {
-		//
-		viewProjection_.UpdateMatrix();
+		viewProjection_.matView = cameraController_->GetViewProjection().matView;
+		viewProjection_.matProjection = cameraController_->GetViewProjection().matProjection;
 	}
-
-
-	// 自キャラの更新
-	player->Update();
-
-	skydome->Update();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -137,10 +130,19 @@ void GameScene::Update() {
 				continue;
 
 			worldTransformBlock->UpdateMatarix();
-
 			worldTransformBlock->TransferMatrix();
 		}
 	}
+
+	// 自キャラの更新
+	player->Update();
+
+	skydome->Update();
+
+	cameraController_->Update();
+
+	viewProjection_.TransferMatrix();
+
 }
 
 void GameScene::Draw() {
@@ -175,7 +177,6 @@ void GameScene::Draw() {
 
 	// 自キャラ
 	player->Draw();
-
 	skydome->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {

@@ -4,12 +4,13 @@
 #include "Input.h"
 #include "Model.h"
 #include "Sprite.h"
+#include "WorldTransform.h"
 #include "ViewProjection.h"
 #include "Skydome.h"
 #include "Player.h"
-#include <DebugCamera.h>
-#include <MapChipField.h>
-#include <vector>
+#include "DebugCamera.h"
+#include "MapChipField.h"
+#include "CameraController.h"
 
 /// <summary>
 /// ゲームシーン
@@ -21,6 +22,32 @@ public: // メンバ関数
 	/// コンストクラタ
 	/// </summary>
 	GameScene();
+
+	
+
+	bool isDebugCameraActive_ = false;
+	DebugCamera* debugCamera_ = nullptr;
+
+	Player* player = nullptr;
+	Vector3 playerPos = {};
+
+	Skydome* skydome = nullptr;
+
+	MapChipField* mapChipField_ = nullptr;
+
+	Model* modelPlayer = nullptr;
+
+	Model* modelBlock_ = nullptr;
+
+	Model* modelSkydome_ = nullptr;
+
+	CameraController* cameraController_;
+
+	// ワールドビュー
+	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
+	WorldTransform worldTransform_;
+	ViewProjection viewProjection_;
+
 
 	/// <summary>
 	/// デストラクタ
@@ -47,6 +74,7 @@ public: // メンバ関数
 	void GenerateBlocks();
 
 private: // メンバ変数
+
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
@@ -55,27 +83,4 @@ private: // メンバ変数
 	/// ゲームシーン用
 	/// </summary>
 
-
-	bool isDebugCameraActive_ = false;
-	DebugCamera* debugCamera_ = nullptr;
-
-
-	Player* player = nullptr;
-	Vector3 playerPos = {};
-
-	Skydome* skydome = nullptr;
-
-	MapChipField* mapChipField_ = nullptr;
-
-
-	Model* modelPlayer = nullptr;
-
-	Model* modelBlock_ = nullptr;
-
-	Model* modelSkydome_ = nullptr;
-
-
-	//ワールドビュー
-	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
-	ViewProjection viewProjection_;
 };

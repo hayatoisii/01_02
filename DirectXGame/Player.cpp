@@ -3,10 +3,8 @@
 #include <algorithm>
 #include <cassert>
 #include <ImGuiManager.h>
+#include "MathUtilityForText.h"
 
-float EaseInOut(float x1, float x2, float t);
-
-float Lerp(float start, float end, float t);
 
 Player::~Player() {
 	model_ = nullptr;
@@ -157,9 +155,6 @@ void Player::Update() {
 		}
 	}
 
-
-	
-
 	// 移動
 	worldTransform_.translation_.x += velocity_.x;
 	worldTransform_.translation_.y += velocity_.y;
@@ -173,13 +168,4 @@ void Player::Update() {
 void Player::Draw() {
 	// 3D作成
 	model_->Draw(worldTransform_, *viewProjection_);
-}
-
-float Lerp(float start, float end, float t) {
-	return start + t * (end - start); // 修正された補間公式
-}
-
-float EaseInOut(float x1, float x2, float t) { 
-	float easedT = -(std::cosf(std::numbers::pi_v<float> * t) - 1.0f) / 2.0f; 
-	return Lerp(x1, x2, easedT);
 }

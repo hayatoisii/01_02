@@ -8,7 +8,9 @@
 
 #include "Input.h"
 
-enum class LRDirection { kRight, kLeft };
+enum class LRDirection {
+	kRight, kLeft
+};
 
 // 自キャラ
 class Player {
@@ -22,15 +24,18 @@ public:
 
 	~Player();
 
+	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
+	const Vector3& GetVelocity() const { return velocity_; }
+
+
 private:
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
+	// ビューポート
+	ViewProjection* viewProjection_ = nullptr;
 
 	// 3Dモデル
 	Model* model_ = nullptr;
-
-	// ビューポート
-	ViewProjection* viewProjection_ = nullptr;
 
 	Vector3 velocity_ = {};
 
@@ -54,4 +59,5 @@ private:
 	static inline const float kLimitFallSpeed = 0.98f;
 	// ジャンプ初速(上)
 	static inline const float kJumpAcceleration = 5.0f;
+
 };
