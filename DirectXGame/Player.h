@@ -1,11 +1,8 @@
 #pragma once
 
 #include "Model.h"
-
 #include "WorldTransform.h"
-
 #include <numbers>
-
 #include "Input.h"
 
 enum class LRDirection {
