@@ -5,6 +5,8 @@
 #include <numbers>
 #include "Input.h"
 
+class MapChipField;
+
 enum class LRDirection {
 	kRight, kLeft
 };
@@ -23,6 +25,8 @@ public:
 
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
 	const Vector3& GetVelocity() const { return velocity_; }
+
+	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 
 
 private:
@@ -56,5 +60,8 @@ private:
 	static inline const float kLimitFallSpeed = 0.98f;
 	// ジャンプ初速(上)
 	static inline const float kJumpAcceleration = 5.0f;
+
+	//　マップチップによるフィールド
+	MapChipField* mapChipField_ = nullptr;
 
 };

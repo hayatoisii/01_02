@@ -10,7 +10,16 @@
 #include <WorldTransform.h>
 #include <Vector3SRT.h>
 
-GameScene::GameScene() {}
+GameScene::GameScene() {
+	debugCamera_ = nullptr;
+	player;
+	skydome;
+	mapChipField_;
+	modelPlayer;
+	modelBlock_;
+	modelSkydome_;
+	cameraController_;
+}
 
 GameScene::~GameScene() {
 	delete debugCamera_;
@@ -104,6 +113,26 @@ void GameScene::Initialize() {
 	cameraController_->SetMovableArea(cameraArea);
 	cameraController_->Reset();
 }
+
+void GameScene::GenerateBlocks() {
+
+	uint32_t numBlockVertical = mapChipField_->GetNumBlockVirtical();
+	uint32_t numBlockHoriaontal = mapChipField_->GetNumBlockHorizontal();
+
+	worldTransformBlocks_.resize(numBlockVertical);
+
+	for (uint32_t i = 0; i < numBlockVertical; i++) {
+		for (uint32_t j = 0; j < numBlockHoriaontal; j++) {
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
+				WorldTransform* worldTransform = new WorldTransform();
+				worldTransform->Initialize();
+				worldTransformBlocks_[i][j] = worldTransform;
+				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+			}
+		}
+	}
+}
+
 
 void GameScene::Update() {
 
