@@ -27,7 +27,7 @@ public:
 	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& pos);
 	// 更新
 	void Update();
-	// 描画
+
 	void Draw();
 
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
