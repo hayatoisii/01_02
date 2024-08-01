@@ -1,5 +1,5 @@
 #define NOMINMAX
-#include "Player.h"
+#include <Player.h>
 #include "Input.h"
 #include "MapChipField.h"
 #include "MathUtilityForText.h"
@@ -10,9 +10,8 @@
 #include <iostream>
 #include <numbers>
 
-void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) {
 
-	// NULLチェック
+void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) {
 	assert(model);
 
 	worldTransform_.Initialize();
@@ -20,15 +19,13 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> / 2.0f;
 
-	// 引数の内容をメンバ変数に記録
 	model_ = model;
-	// textureHandle_ = textureHandle;
+
 	viewProjection_ = viewProjection;
 }
 
 void Player::Update() {
 
-	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();
 
 	MovePlayer();
@@ -48,21 +45,19 @@ void Player::Update() {
 
 	GraundSetting(collisionMapInfo);
 
-	// 行列計算
+
 	worldTransform_.UpdateMatarix();
 
+	//旋回
 	if (turnTimer_ > 0.0f) {
 
 		turnTimer_ -= static_cast<float>(1.0f) / 60.0f;
 
-		// 左右の自キャラ角度テーブル
 		float destinationRotationYTable[] = {
 		    std::numbers::pi_v<float> / 2.0f, std::numbers::pi_v<float> * 3.0f / 2.0f
 
 		};
-		// 状態に応じた目標角度を取得する
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrdDirection_)];
-		// 自キャラ角度を設定する
 		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
 	}
 
@@ -70,14 +65,12 @@ void Player::Update() {
 
 void Player::Draw() {
 
-	// 3Dモデルを描画
 	model_->Draw(worldTransform_, *viewProjection_);
 }
 
 void Player::MovePlayer() {
 
 	// 移動入力
-	// 接地状態
 	if (onGround_) {
 		// 左右移動操作
 		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
@@ -137,7 +130,7 @@ void Player::MovePlayer() {
 }
 
 void Player::CeilingContact(const CollisionMapInfo& info) {
-	// 天井に当たった?
+	// 天井、当り判定
 	if (info.hitCeilingFlag) {
 		DebugText::GetInstance()->ConsolePrintf("hit ceiling\n");
 		velocity_.y = 0;
@@ -154,12 +147,12 @@ void Player::CheckMapCollision(CollisionMapInfo& info) {
 
 void Player::CheckMapCollisionUp(CollisionMapInfo& info) {
 
-	// 上昇あり？
+
 	if (info.movement.y <= 0) {
 		return;
 	}
 
-	// 移動後の4つの角の座標
+
 	std::array<Vector3, kNumCorner> positionsNew;
 
 	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
@@ -198,7 +191,6 @@ void Player::CheckMapCollisionUp(CollisionMapInfo& info) {
 
 		MapChipField::IndexSet indexSetNow;
 
-		// めり込みを排除する方向に移動量を設定する
 		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + Vector3(0, +kHeight / 3.0f, 0));
 
 		if (indexSetNow.yIndex != indexSet.yIndex) {
@@ -214,7 +206,6 @@ void Player::CheckMapCollisionUp(CollisionMapInfo& info) {
 
 void Player::CheckMapCollisionDown(CollisionMapInfo& info) {
 
-	// 下降アリ？
 	if (info.movement.y >= 0) {
 		return;
 	}
@@ -249,7 +240,6 @@ void Player::CheckMapCollisionDown(CollisionMapInfo& info) {
 		hit = true;
 	}
 
-	// ブロックにヒット？
 	if (hit) {
 		MapChipField::IndexSet indexSetNow;
 		indexSetNow = mapChipField_->GetMapChipIndexSetByPosition(worldTransform_.translation_ + Vector3(0, -kHeight / 2.0f, 0));
@@ -265,7 +255,7 @@ void Player::CheckMapCollisionDown(CollisionMapInfo& info) {
 }
 
 void Player::CheckMapCollisionRight(CollisionMapInfo& info) {
-	// 移動後の4つの角の座標
+
 	std::array<Vector3, kNumCorner> positionsNew;
 
 	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
@@ -297,7 +287,7 @@ void Player::CheckMapCollisionRight(CollisionMapInfo& info) {
 }
 
 void Player::CheckMapCollisionLeft(CollisionMapInfo& info) {
-	// 移動後の4つの角の座標
+
 	std::array<Vector3, kNumCorner> positionsNew;
 
 	for (uint32_t i = 0; i < positionsNew.size(); ++i) {
@@ -388,10 +378,10 @@ void Player::JudgmentMove(const CollisionMapInfo& info) {
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 
 	Vector3 offsetTable[kNumCorner] = {
-	    {+kWidth / 2.0f, -kHeight / 2.0f, 0}, // kRightBottom
-	    {-kWidth / 2.0f, -kHeight / 2.0f, 0}, // kLeftBottom
-	    {+kWidth / 2.0f, +kHeight / 2.0f, 0}, // kRightTop
-	    {-kWidth / 2.0f, +kHeight / 2.0f, 0}  // kleftTop
+	    {+kWidth / 2.0f, -kHeight / 2.0f, 0}, 
+	    {-kWidth / 2.0f, -kHeight / 2.0f, 0}, 
+	    {+kWidth / 2.0f, +kHeight / 2.0f, 0},
+	    {-kWidth / 2.0f, +kHeight / 2.0f, 0}  
 	};
 
 	return center + offsetTable[static_cast<uint32_t>(corner)];
