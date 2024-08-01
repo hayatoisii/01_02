@@ -1,5 +1,4 @@
 #pragma once
-
 #include "MathUtilityForText.h"
 #include "Vector3.h"
 #include "ViewProjection.h"

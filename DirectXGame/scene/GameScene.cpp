@@ -12,21 +12,21 @@
 
 GameScene::GameScene() {
 	debugCamera_ = nullptr;
-	player;
-	skydome;
-	mapChipField_;
-	modelPlayer;
-	modelBlock_;
-	modelSkydome_;
-	cameraController_;
+	player_ = nullptr;
+	skydome = nullptr;
+	mapChipField_ = nullptr;
+	modelPlayer_ = nullptr;
+	modelBlock_ = nullptr;
+	modelSkydome_ = nullptr;
+	cameraController_ = nullptr;
 }
 
 GameScene::~GameScene() {
 	delete debugCamera_;
-	delete player;
+	delete player_;
 	delete skydome;
 	delete mapChipField_;
-	delete modelPlayer;
+	delete modelPlayer_;
 	delete modelBlock_;
 	delete modelSkydome_;
 	delete cameraController_;
@@ -73,7 +73,7 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 
-	modelBlock_ = Model::Create();
+	modelBlock_ = Model::CreateFromOBJ("block");
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
@@ -92,15 +92,23 @@ void GameScene::Initialize() {
 
 
 	// 自キャラの生成
-	player = new Player;
+	player_ = new Player;
 
-	modelPlayer = Model::CreateFromOBJ("player", true);
+	modelPlayer_ = Model::CreateFromOBJ("player", true);
 
 	// 座標をマップチップ番号で指定
 	playerPos = mapChipField_->GetMapChipPositionByIndex(9, 9);
 
 	// 自キャラの初期化
-	player->Initialize(modelPlayer, &viewProjection_, playerPos);
+	player_->Initialize(modelPlayer_, &viewProjection_, playerPos);
+
+		// プレイヤーの初期位置の取得
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
+
+	// プレイヤーの生成と初期化
+	player_ = new Player();
+	player_->SetMapChipField(mapChipField_);
+	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
 
 	debugCamera_ = new DebugCamera(1280, 720);
 
@@ -108,29 +116,10 @@ void GameScene::Initialize() {
 
 	cameraController_ = new CameraController();
 	cameraController_->Initialize();
-	cameraController_->setTarget(player);
+	cameraController_->setTarget(player_);
 	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
 	cameraController_->SetMovableArea(cameraArea);
 	cameraController_->Reset();
-}
-
-void GameScene::GenerateBlocks() {
-
-	uint32_t numBlockVertical = mapChipField_->GetNumBlockVirtical();
-	uint32_t numBlockHoriaontal = mapChipField_->GetNumBlockHorizontal();
-
-	worldTransformBlocks_.resize(numBlockVertical);
-
-	for (uint32_t i = 0; i < numBlockVertical; i++) {
-		for (uint32_t j = 0; j < numBlockHoriaontal; j++) {
-			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
-				WorldTransform* worldTransform = new WorldTransform();
-				worldTransform->Initialize();
-				worldTransformBlocks_[i][j] = worldTransform;
-				worldTransformBlocks_[i][j]->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
-			}
-		}
-	}
 }
 
 
@@ -164,7 +153,7 @@ void GameScene::Update() {
 	}
 
 	// 自キャラの更新
-	player->Update();
+	player_->Update();
 
 	skydome->Update();
 
@@ -205,7 +194,7 @@ void GameScene::Draw() {
 
 
 	// 自キャラ
-	player->Draw();
+	player_->Draw();
 	skydome->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {

@@ -28,14 +28,14 @@ public: // メンバ関数
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 
-	Player* player = nullptr;
+	Player* player_ = nullptr;
 	Vector3 playerPos = {};
 
 	Skydome* skydome = nullptr;
 
 	MapChipField* mapChipField_ = nullptr;
 
-	Model* modelPlayer = nullptr;
+	Model* modelPlayer_ = nullptr;
 
 	Model* modelBlock_ = nullptr;
 
