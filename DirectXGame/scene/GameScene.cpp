@@ -64,7 +64,7 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 
-	//modelBlock_ = Model::Create();
+	modelBlock_ = Model::Create();
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
