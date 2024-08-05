@@ -38,8 +38,6 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	modelEnemy_ = Model::CreateFromOBJ("enemy");
-
 	modelBlock_ = Model::CreateFromOBJ("block");
 
 	worldTransform_.Initialize();
@@ -57,10 +55,17 @@ void GameScene::Initialize() {
 	// Mapのよみこみ
 	mapChipField_->LoadMapChipCsv("Resources/map.csv");
 
+
+	//enemy
+	modelEnemy_ = Model::CreateFromOBJ("enemy");
+
 	Vector3 enmyPosition = mapChipField_->GetMapChipPositionByIndex(7, 18);
 
 	enemy_ = new Enemy();
 	enemy_->Initialize(modelEnemy_, &viewProjection_, enmyPosition);
+
+
+
 
 	// 自キャラの生成
 	player_ = new Player;

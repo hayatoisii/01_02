@@ -23,7 +23,7 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vecto
 	viewProjection_ = viewProjection;
 }
 
-void Enemy::Update() {}
+void Enemy::Update() { worldTransform_.UpdateMatarix(); }
 
 // 描画
 void Enemy::Draw() {
