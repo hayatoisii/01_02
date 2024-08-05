@@ -30,6 +30,7 @@ GameScene::~GameScene() {
 	delete modelBlock_;
 	delete modelSkydome_;
 	delete cameraController_;
+	delete enemy_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -72,16 +73,11 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-
-	modelBlock_ = Model::CreateFromOBJ("block");
-
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
 	// SkyDome作成
 	skydome = new Skydome;
-
-	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
 
 	skydome->Initialize(modelSkydome_, &viewProjection_);
 
@@ -95,20 +91,23 @@ void GameScene::Initialize() {
 	player_ = new Player;
 
 	modelPlayer_ = Model::CreateFromOBJ("player", true);
+	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
+	modelBlock_ = Model::CreateFromOBJ("block");
+	modelEnemy_ = Model::CreateFromOBJ("enemy", true);
 
 	// 座標をマップチップ番号で指定
 	playerPos = mapChipField_->GetMapChipPositionByIndex(9, 9);
-
-	// 自キャラの初期化
-	player_->Initialize(modelPlayer_, &viewProjection_, playerPos);
-
 		// プレイヤーの初期位置の取得
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
+	Vector3 enmyPosition = mapChipField_->GetMapChipPositionByIndex(20, 20);
 
 	// プレイヤーの生成と初期化
 	player_ = new Player();
 	player_->SetMapChipField(mapChipField_);
 	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
+
+	enemy_ = new Enemy();
+	enemy_->Initialize(modelEnemy_, &viewProjection_, enmyPosition);
 
 	debugCamera_ = new DebugCamera(1280, 720);
 
@@ -161,6 +160,8 @@ void GameScene::Update() {
 
 	viewProjection_.TransferMatrix();
 
+	enemy_->Update();
+
 }
 
 void GameScene::Draw() {
@@ -196,6 +197,7 @@ void GameScene::Draw() {
 	// 自キャラ
 	player_->Draw();
 	skydome->Draw();
+	enemy_->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {

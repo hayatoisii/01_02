@@ -11,6 +11,7 @@
 #include "DebugCamera.h"
 #include "MapChipField.h"
 #include "CameraController.h"
+#include "Enemy.h"
 
 /// <summary>
 /// ゲームシーン
@@ -23,7 +24,6 @@ public: // メンバ関数
 	/// </summary>
 	GameScene();
 
-	
 
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
@@ -40,6 +40,10 @@ public: // メンバ関数
 	Model* modelBlock_ = nullptr;
 
 	Model* modelSkydome_ = nullptr;
+
+	Model* modelEnemy_ = nullptr;
+
+	Enemy* enemy_ = nullptr;
 
 	CameraController* cameraController_;
 
