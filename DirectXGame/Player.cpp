@@ -70,7 +70,7 @@ void Player::Draw() {
 // 当たり判定
 Vector3 Player::GetWorldPosition() {
 	Vector3 worldPos;
-	// ワールド行列から平行移動成分を取り出す
+
 	worldPos.x = worldTransform_.matWorld_.m[3][0];
 	worldPos.y = worldTransform_.matWorld_.m[3][1];
 	worldPos.z = worldTransform_.matWorld_.m[3][2];
