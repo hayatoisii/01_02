@@ -10,16 +10,7 @@
 #include <WorldTransform.h>
 #include <Vector3SRT.h>
 
-GameScene::GameScene() {
-	debugCamera_ = nullptr;
-	player_ = nullptr;
-	skydome = nullptr;
-	mapChipField_ = nullptr;
-	modelPlayer_ = nullptr;
-	modelBlock_ = nullptr;
-	modelSkydome_ = nullptr;
-	cameraController_ = nullptr;
-}
+GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	delete debugCamera_;
@@ -30,6 +21,7 @@ GameScene::~GameScene() {
 	delete modelBlock_;
 	delete modelSkydome_;
 	delete cameraController_;
+	delete enemy_;
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -37,6 +29,67 @@ GameScene::~GameScene() {
 		}
 	}
 	worldTransformBlocks_.clear();
+}
+
+
+void GameScene::Initialize() {
+
+	dxCommon_ = DirectXCommon::GetInstance();
+	input_ = Input::GetInstance();
+	audio_ = Audio::GetInstance();
+
+	modelEnemy_ = Model::CreateFromOBJ("enemy");
+
+	modelBlock_ = Model::CreateFromOBJ("block");
+
+	worldTransform_.Initialize();
+	viewProjection_.Initialize();
+
+	// SkyDome作成
+	skydome = new Skydome;
+
+	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
+
+	skydome->Initialize(modelSkydome_, &viewProjection_);
+
+	// Mapの生成
+	mapChipField_ = new MapChipField;
+	// Mapのよみこみ
+	mapChipField_->LoadMapChipCsv("Resources/map.csv");
+
+	Vector3 enmyPosition = mapChipField_->GetMapChipPositionByIndex(7, 18);
+
+	enemy_ = new Enemy();
+	enemy_->Initialize(modelEnemy_, &viewProjection_, enmyPosition);
+
+	// 自キャラの生成
+	player_ = new Player;
+
+	modelPlayer_ = Model::CreateFromOBJ("player", true);
+
+
+	// 自キャラの初期化
+	player_->Initialize(modelPlayer_, &viewProjection_, playerPos);
+
+		// プレイヤーの初期位置の取得
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
+
+	// プレイヤーの生成と初期化
+	player_ = new Player();
+	player_->SetMapChipField(mapChipField_);
+	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
+
+
+	debugCamera_ = new DebugCamera(1280, 720);
+
+	GenerateBlocks();
+
+	cameraController_ = new CameraController();
+	cameraController_->Initialize();
+	cameraController_->setTarget(player_);
+	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
+	cameraController_->SetMovableArea(cameraArea);
+	cameraController_->Reset();
 }
 
 void GameScene::GenerateBlocks() {
@@ -64,62 +117,6 @@ void GameScene::GenerateBlocks() {
 			}
 		}
 	}
-}
-
-void GameScene::Initialize() {
-
-	dxCommon_ = DirectXCommon::GetInstance();
-	input_ = Input::GetInstance();
-	audio_ = Audio::GetInstance();
-
-
-	modelBlock_ = Model::CreateFromOBJ("block");
-
-	worldTransform_.Initialize();
-	viewProjection_.Initialize();
-
-	// SkyDome作成
-	skydome = new Skydome;
-
-	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
-
-	skydome->Initialize(modelSkydome_, &viewProjection_);
-
-	// Mapの生成
-	mapChipField_ = new MapChipField;
-	// Mapのよみこみ
-	mapChipField_->LoadMapChipCsv("Resources/map.csv");
-
-
-	// 自キャラの生成
-	player_ = new Player;
-
-	modelPlayer_ = Model::CreateFromOBJ("player", true);
-
-	// 座標をマップチップ番号で指定
-	playerPos = mapChipField_->GetMapChipPositionByIndex(9, 9);
-
-	// 自キャラの初期化
-	player_->Initialize(modelPlayer_, &viewProjection_, playerPos);
-
-		// プレイヤーの初期位置の取得
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
-
-	// プレイヤーの生成と初期化
-	player_ = new Player();
-	player_->SetMapChipField(mapChipField_);
-	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
-
-	debugCamera_ = new DebugCamera(1280, 720);
-
-	GenerateBlocks();
-
-	cameraController_ = new CameraController();
-	cameraController_->Initialize();
-	cameraController_->setTarget(player_);
-	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
-	cameraController_->SetMovableArea(cameraArea);
-	cameraController_->Reset();
 }
 
 
@@ -161,6 +158,8 @@ void GameScene::Update() {
 
 	viewProjection_.TransferMatrix();
 
+	enemy_->Update();
+
 }
 
 void GameScene::Draw() {
@@ -196,6 +195,7 @@ void GameScene::Draw() {
 	// 自キャラ
 	player_->Draw();
 	skydome->Draw();
+	enemy_->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {

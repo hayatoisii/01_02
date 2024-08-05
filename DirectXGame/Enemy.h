@@ -18,9 +18,7 @@ public:
 	// 描画
 	void Draw();
 
-	~Enemy();
 
-private:
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
 
