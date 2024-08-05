@@ -38,49 +38,35 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	modelBlock_ = Model::CreateFromOBJ("block");
 
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
 	// SkyDome作成
 	skydome = new Skydome;
-
-	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
-
-	skydome->Initialize(modelSkydome_, &viewProjection_);
-
 	// Mapの生成
 	mapChipField_ = new MapChipField;
-	// Mapのよみこみ
-	mapChipField_->LoadMapChipCsv("Resources/map.csv");
-
-
-	//enemy
-	modelEnemy_ = Model::CreateFromOBJ("enemy");
-
-	Vector3 enmyPosition = mapChipField_->GetMapChipPositionByIndex(7, 18);
-
-	enemy_ = new Enemy();
-	enemy_->Initialize(modelEnemy_, &viewProjection_, enmyPosition);
-
-
-
-
 	// 自キャラの生成
 	player_ = new Player;
+	// 敵
+	enemy_ = new Enemy();
 
+	// Mapのよみこみ
+	mapChipField_->LoadMapChipCsv("Resources/map.csv");
 	modelPlayer_ = Model::CreateFromOBJ("player", true);
+	modelEnemy_ = Model::CreateFromOBJ("enemy");
+	modelBlock_ = Model::CreateFromOBJ("block");
+	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
 
-
-	// 自キャラの初期化
-	player_->Initialize(modelPlayer_, &viewProjection_, playerPos);
-
-		// プレイヤーの初期位置の取得
+	// プレイヤーの初期位置の取得
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
 
+	// 敵の初期位置の取得
+	Vector3 enmyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
+
+	skydome->Initialize(modelSkydome_, &viewProjection_);
+	enemy_->Initialize(modelEnemy_, &viewProjection_, enmyPosition);
 	// プレイヤーの生成と初期化
-	player_ = new Player();
 	player_->SetMapChipField(mapChipField_);
 	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
 
