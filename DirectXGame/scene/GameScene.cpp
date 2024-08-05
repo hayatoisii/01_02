@@ -2,26 +2,25 @@
 
 #include "GameScene.h"
 #include "AxisIndicator.h"
-#include "ImGuiManager.h"
-#include "PrimitiveDrawer.h"
 #include "TextureManager.h"
 #include <cassert>
-#include <MakeMatrix.h>
-#include <WorldTransform.h>
 #include <Vector3SRT.h>
 
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 	delete debugCamera_;
-	delete player_;
 	delete skydome;
 	delete mapChipField_;
 	delete modelPlayer_;
 	delete modelBlock_;
 	delete modelSkydome_;
 	delete cameraController_;
-	delete enemy_;
+
+	for (Enemy* enemy : enemies_) {
+		delete enemy;
+	}
+	enemies_.clear();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -48,8 +47,6 @@ void GameScene::Initialize() {
 	mapChipField_ = new MapChipField;
 	// 自キャラの生成
 	player_ = new Player;
-	// 敵
-	enemy_ = new Enemy();
 
 	// Mapのよみこみ
 	mapChipField_->LoadMapChipCsv("Resources/map.csv");
@@ -65,10 +62,14 @@ void GameScene::Initialize() {
 	Vector3 enmyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
 
 	skydome->Initialize(modelSkydome_, &viewProjection_);
-	enemy_->Initialize(modelEnemy_, &viewProjection_, enmyPosition);
 	// プレイヤーの生成と初期化
 	player_->SetMapChipField(mapChipField_);
 	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
+
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(18, 18);
+	Enemy* newEnemy = new Enemy();
+	newEnemy->Initialize(modelEnemy_, &viewProjection_, enemyPosition);
+	enemies_.push_back(newEnemy);
 
 
 	debugCamera_ = new DebugCamera(1280, 720);
@@ -149,7 +150,11 @@ void GameScene::Update() {
 
 	viewProjection_.TransferMatrix();
 
-	enemy_->Update();
+	CheckAllCollisions();
+
+	for (Enemy* enemy : enemies_) {
+		enemy->Update();
+	}
 
 }
 
@@ -186,7 +191,9 @@ void GameScene::Draw() {
 	// 自キャラ
 	player_->Draw();
 	skydome->Draw();
-	enemy_->Draw();
+	for (Enemy* enemy : enemies_) {
+		enemy->Draw();
+	}
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -211,5 +218,29 @@ void GameScene::Draw() {
 	// スプライト描画後処理
 	Sprite::PostDraw();
 
+#pragma endregion
+}
+
+void GameScene::CheckAllCollisions() {
+
+#pragma region 自キャラと敵キャラの当たり判定
+
+	// 判定対象1と2の座標
+	AABB aabb1, aabb2;
+
+	// 自キャラの座標
+	aabb1 = player_->GetAABB();
+	for (Enemy* enemy : enemies_) {
+		// 敵弾の座標
+		aabb2 = enemy->GetAABB();
+
+		// AABB同士の交差判定(
+		if (IsCollisionAABB(aabb1, aabb2)) {
+			// 自キャラの衝突判定コールバックを呼び出す
+			player_->OnCollision(enemy);
+			// 敵弾の衝突判定コールバックを呼び出す
+			enemy->OnCollision(player_);
+		}
+	}
 #pragma endregion
 }

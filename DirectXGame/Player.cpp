@@ -2,7 +2,6 @@
 #include <Player.h>
 #include "Input.h"
 #include "MapChipField.h"
-#include "MathUtilityForText.h"
 #include <DebugText.h>
 #include <algorithm>
 #include <array>
@@ -45,7 +44,6 @@ void Player::Update() {
 
 	GraundSetting(collisionMapInfo);
 
-
 	worldTransform_.UpdateMatarix();
 
 	//旋回
@@ -63,9 +61,37 @@ void Player::Update() {
 
 }
 
+
 void Player::Draw() {
 
 	model_->Draw(worldTransform_, *viewProjection_);
+}
+
+// 当たり判定
+Vector3 Player::GetWorldPosition() {
+	Vector3 worldPos;
+	// ワールド行列から平行移動成分を取り出す
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+	return worldPos;
+}
+
+AABB Player::GetAABB() {
+	Vector3 worldPos = GetWorldPosition();
+
+	AABB aabb;
+	aabb.min = {worldPos.x - radius_, worldPos.y - radius_, worldPos.z - radius_};
+	aabb.max = {worldPos.x + radius_, worldPos.y + radius_, worldPos.z + radius_};
+	return aabb;
+
+	return aabb;
+}
+
+void Player::OnCollision(const Enemy* enemy) {
+	(void)enemy;
+	// ジャンプ開始
+	velocity_ += Vector3(0, kJumpAcceleration / 1.0f, 0);
 }
 
 void Player::MovePlayer() {

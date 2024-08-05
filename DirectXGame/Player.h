@@ -1,10 +1,14 @@
 #pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "ViewProjection.h"
 #include <numbers>
 #include "Input.h"
+#include "MathUtilityForText.h"
+#include "AABB.h"
 
 class MapChipField;
+class Enemy;
 
 enum class LRDirection {
 	kRight, kLeft
@@ -30,8 +34,8 @@ public:
 
 	void Draw();
 
-	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
-	const Vector3& GetVelocity() const { return velocity_; }
+	const WorldTransform& GetWorldTransform(){ return worldTransform_; }
+	Vector3& GetVelocity() { return velocity_; }
 
 	void SetMapChipField(MapChipField* mapChipField) { mapChipField_ = mapChipField; }
 
@@ -51,6 +55,11 @@ public:
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
+	Vector3 GetWorldPosition();
+
+	AABB GetAABB();
+
+	void OnCollision(const Enemy* enemy);
 
 private:
 	// ワールドトランスフォーム
@@ -74,6 +83,8 @@ private:
 	// 設置状態フラグ
 	bool onGround_ = true;
 
+	Vector3 worldPos_;
+	float radius_;
 
 	static inline const float kAcceleration = 0.2f;
 	static inline const float kAttenuation = 0.2f;

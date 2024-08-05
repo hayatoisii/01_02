@@ -1,15 +1,9 @@
-#define NOMINMAX
-#include <ImGuiManager.h>
-#include "MathUtilityForText.h"
 #include <Enemy.h>
-#include <algorithm>
-#include <cassert>
+#include <numbers>
 
 // 初期化
 void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& pos) 
 {
-	assert(model);
-	// 3Dモデルの作成
 	model_ = model;
 	// ワールドトランスフォームの初期化
 	worldTransform_.Initialize();
@@ -25,12 +19,12 @@ void Enemy::Initialize(Model* model, ViewProjection* viewProjection, const Vecto
 
 void Enemy::Update() { 
 	
-	worldTransform_.translation_ += velocity_;
-	walkTimer_ += 1.0f / 60.0f;
+	worldTransform_.translation_.x += velocity_.x;
+	worldTransform_.translation_.y += velocity_.y;
+	worldTransform_.translation_.z += velocity_.z;
 
-	float parm = std::sin(std::numbers::pi_v<float> * 2.0f * walkTimer_ / kWalkMotionTime);
-	float radian = kWalkMotionAngleStart + kWalkMontionAngleEnd * (parm + 1.0f) / 2.0f;
-	worldTransform_.rotation_.x = radian;
+	walkTimer_ += 1.0f / 60.0f;
+	worldTransform_.rotation_.x = std::sin(std::numbers::pi_v<float> * 2.0f * walkTimer_ / kWalkMotionTime);
 	
 	worldTransform_.UpdateMatarix(); 
 }
@@ -40,3 +34,34 @@ void Enemy::Draw() {
 	// 3D作成
 	model_->Draw(worldTransform_, *viewProjection_);
 }
+
+Vector3 Enemy::GetWorldPosition() {
+
+	Vector3 worldPos;
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+
+}
+
+AABB Enemy::GetAABB() {
+	Vector3 worldPos = GetWorldPosition();
+
+	AABB aabb;
+
+	aabb.min = {worldPos.x - kWidth / 2.0f, worldPos.y - kHeight / 2.0f, worldPos.z - kWidth / 2.0f};
+	aabb.max = {worldPos.x + kWidth / 2.0f, worldPos.y + kHeight / 2.0f, worldPos.z + kWidth / 2.0f};
+
+	return aabb;
+}
+
+void Enemy::OnCollision(const Player* player) 
+{ 
+
+	(void)player;
+
+}
+

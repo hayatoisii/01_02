@@ -12,6 +12,7 @@
 #include "MapChipField.h"
 #include "CameraController.h"
 #include "Enemy.h"
+#include "AABB.h"
 
 /// <summary>
 /// ゲームシーン
@@ -24,29 +25,27 @@ public: // メンバ関数
 	/// </summary>
 	GameScene();
 
-	
 
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 
 	
 	Model* modelEnemy_ = nullptr;
-	Enemy* enemy_ = nullptr;
-
 	Player* player_ = nullptr;
-	Vector3 playerPos = {};
-
 	Skydome* skydome = nullptr;
-
 	MapChipField* mapChipField_ = nullptr;
 
 	Model* modelPlayer_ = nullptr;
-
 	Model* modelBlock_ = nullptr;
-
 	Model* modelSkydome_ = nullptr;
 
+	Vector3 playerPos = {};
+
+	std::list<Enemy*> enemies_;
+
 	CameraController* cameraController_;
+
+	void CheckAllCollisions();
 
 	// ワールドビュー
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
