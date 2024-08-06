@@ -16,6 +16,7 @@ GameScene::~GameScene() {
 	delete modelBlock_;
 	delete modelSkydome_;
 	delete cameraController_;
+	delete dethParticles_;
 
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
@@ -54,6 +55,7 @@ void GameScene::Initialize() {
 	modelEnemy_ = Model::CreateFromOBJ("enemy");
 	modelBlock_ = Model::CreateFromOBJ("block");
 	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
+	modelParticles_ = Model::CreateFromOBJ("deathParticle", true);
 
 	// プレイヤーの初期位置の取得
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
@@ -71,6 +73,9 @@ void GameScene::Initialize() {
 	newEnemy->Initialize(modelEnemy_, &viewProjection_, enemyPosition);
 	enemies_.push_back(newEnemy);
 
+	// パーティクル生成
+	dethParticles_ = new DeathParticles;
+	dethParticles_->Initialize(modelParticles_, &viewProjection_, playerPosition);
 
 	debugCamera_ = new DebugCamera(1280, 720);
 
@@ -156,6 +161,10 @@ void GameScene::Update() {
 		enemy->Update();
 	}
 
+	if (dethParticles_) {
+		dethParticles_->Update();
+	}
+
 }
 
 void GameScene::Draw() {
@@ -191,8 +200,13 @@ void GameScene::Draw() {
 	// 自キャラ
 	player_->Draw();
 	skydome->Draw();
+
 	for (Enemy* enemy : enemies_) {
 		enemy->Draw();
+	}
+
+	if (dethParticles_) {
+		dethParticles_->Draw();
 	}
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {

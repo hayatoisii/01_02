@@ -13,6 +13,7 @@
 #include "CameraController.h"
 #include "Enemy.h"
 #include "AABB.h"
+#include "DeathParticles.h"
 
 /// <summary>
 /// ゲームシーン
@@ -29,15 +30,16 @@ public: // メンバ関数
 	bool isDebugCameraActive_ = false;
 	DebugCamera* debugCamera_ = nullptr;
 
-	
-	Model* modelEnemy_ = nullptr;
 	Player* player_ = nullptr;
 	Skydome* skydome = nullptr;
 	MapChipField* mapChipField_ = nullptr;
+	DeathParticles* dethParticles_ = nullptr;
 
+	Model* modelEnemy_ = nullptr;
 	Model* modelPlayer_ = nullptr;
 	Model* modelBlock_ = nullptr;
 	Model* modelSkydome_ = nullptr;
+	Model* modelParticles_ = nullptr;
 
 	Vector3 playerPos = {};
 
