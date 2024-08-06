@@ -196,7 +196,6 @@ void GameScene::Draw() {
 	/// </summary>
 	///
 
-
 	// 自キャラ
 	player_->Draw();
 	skydome->Draw();
