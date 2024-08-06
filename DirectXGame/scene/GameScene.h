@@ -43,11 +43,11 @@ public: // メンバ関数
 
 	Vector3 playerPos = {};
 
-	std::list<Enemy*> enemies_;
-
 	CameraController* cameraController_;
 
 	void CheckAllCollisions();
+
+	std::list<Enemy*> enemies_;
 
 	// ワールドビュー
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
