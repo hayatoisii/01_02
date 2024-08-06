@@ -54,6 +54,16 @@ public: // メンバ関数
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
 
+	// ゲームのフェーズ(型)
+	enum class Phase {
+		kPlay,  // ゲームプレイ
+		kDeath, // デス演出
+	};
+
+	Phase phace_;
+
+	bool finished_ = false;
+
 
 	/// <summary>
 	/// デストラクタ

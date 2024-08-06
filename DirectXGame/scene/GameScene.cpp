@@ -1,5 +1,4 @@
 #pragma once
-
 #include "GameScene.h"
 #include "AxisIndicator.h"
 #include "TextureManager.h"
