@@ -20,6 +20,12 @@
 /// </summary>
 
 class DethPertcles;
+
+// ゲームのフェーズ(型)
+enum class Phase {
+	kPlay,  // ゲームプレイ
+	kDeath, // デス演出
+};
  
 class GameScene {
 
@@ -54,14 +60,6 @@ public: // メンバ関数
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
-
-	// ゲームのフェーズ(型)
-	enum class Phase {
-		kPlay,  // ゲームプレイ
-		kDeath, // デス演出
-	};
-
-	Phase phace_;
 
 	bool finished_ = false;
 
@@ -101,6 +99,8 @@ private: // メンバ変数
 	Audio* audio_ = nullptr;
 
 	DeathParticles* deathParticles_ = nullptr;
+
+	Phase phace_;
 
 	/// <summary>
 	/// ゲームシーン用

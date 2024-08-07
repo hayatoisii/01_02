@@ -16,10 +16,10 @@ GameScene::~GameScene() {
 	delete modelSkydome_;
 	delete cameraController_;
 	delete dethParticles_;
-
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
+	delete modelEnemy_;
 	enemies_.clear();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -119,119 +119,104 @@ void GameScene::GenerateBlocks() {
 }
 
 
-void GameScene::Update() {
 
-	ChangePhase();
+void GameScene::Update() {
 
 	switch (phace_) {
 	case Phase::kPlay:
+		// ゲームプレイフェーズの処理
 
 		// 自キャラの更新
 		player_->Update();
 
-		// 天球の更新
 		skydome->Update();
 
-		// カメラコントローラの更新
 		cameraController_->Update();
 
-		// 敵の更新
+		viewProjection_.TransferMatrix();
+
+		CheckAllCollisions();
+
 		for (Enemy* enemy : enemies_) {
 			enemy->Update();
 		}
 
-		// 縦横ブロック更新
-		for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
-			for (WorldTransform* worldTransformBlockYoko : worldTransformBlockTate) {
-				if (!worldTransformBlockYoko)
-					continue;
+		#ifdef _DEBUG
 
-				// アフィン変換行列の作成
-				//(MakeAffineMatrix：自分で作った数学系関数)
-				worldTransformBlockYoko->matWorld_ = MakeAffineMatrix(worldTransformBlockYoko->scale_, worldTransformBlockYoko->rotation_, worldTransformBlockYoko->translation_);
-
-				// 定数バッファに転送
-				worldTransformBlockYoko->TransferMatrix();
-			}
-		}
-
-		// カメラ処理
-		if (isDebugCameraActive_) {
-			// デバッグカメラの更新
-			debugCamera_->Update();
-			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-			// ビュープロジェクション行列の転送
-			viewProjection_.TransferMatrix();
-		} else {
-			// ビュープロジェクション行列の更新と転送
-			viewProjection_.matView = cameraController_->GetViewProjection().matView;
-			viewProjection_.matProjection = cameraController_->GetViewProjection().matProjection;
-			// ビュープロジェクションの転送
-			viewProjection_.TransferMatrix();
-		}
-
-#ifdef _DEBUG
 		if (input_->TriggerKey(DIK_SPACE)) {
-			if (isDebugCameraActive_ == true)
-				isDebugCameraActive_ = false;
-			else
-				isDebugCameraActive_ = true;
+			isDebugCameraActive_ = !isDebugCameraActive_;
 		}
 #endif
 
-		// 全てのあたり判定を行う
-		CheckAllCollisions();
-
-		break;
-	case Phase::kDeath:
-
-		// 天球の更新
-		skydome->Update();
-
-		// 敵の更新
-		for (Enemy* enemy : enemies_) {
-			enemy->Update();
-		}
-
-		// 縦横ブロック更新
-		for (std::vector<WorldTransform*> worldTransformBlockTate : worldTransformBlocks_) {
-			for (WorldTransform* worldTransformBlockYoko : worldTransformBlockTate) {
-				if (!worldTransformBlockYoko)
-					continue;
-
-				// アフィン変換行列の作成
-				//(MakeAffineMatrix：自分で作った数学系関数)
-				worldTransformBlockYoko->matWorld_ = MakeAffineMatrix(worldTransformBlockYoko->scale_, worldTransformBlockYoko->rotation_, worldTransformBlockYoko->translation_);
-
-				// 定数バッファに転送
-				worldTransformBlockYoko->TransferMatrix();
-			}
-		}
-
-		// カメラ処理
 		if (isDebugCameraActive_) {
-			// デバッグカメラの更新
 			debugCamera_->Update();
 			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
-			// ビュープロジェクション行列の転送
-			viewProjection_.TransferMatrix();
+
 		} else {
-			// ビュープロジェクション行列の更新と転送
 			viewProjection_.matView = cameraController_->GetViewProjection().matView;
 			viewProjection_.matProjection = cameraController_->GetViewProjection().matProjection;
-			// ビュープロジェクションの転送
-			viewProjection_.TransferMatrix();
 		}
 
-		if (deathParticles_) {
-			deathParticles_->Update();
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+
+				worldTransformBlock->UpdateMatarix();
+				worldTransformBlock->TransferMatrix();
+			}
+		}
+
+		break;
+	case Phase::kDeath:
+		// デス演出フェースの処理
+#ifdef _DEBUG
+
+		if (input_->TriggerKey(DIK_SPACE)) {
+			isDebugCameraActive_ = !isDebugCameraActive_;
+		}
+#endif
+
+		if (isDebugCameraActive_) {
+			debugCamera_->Update();
+			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+
+		} else {
+			viewProjection_.matView = cameraController_->GetViewProjection().matView;
+			viewProjection_.matProjection = cameraController_->GetViewProjection().matProjection;
 		}
 
 		break;
 	}
+	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+			if (!worldTransformBlock)
+				continue;
+
+			worldTransformBlock->UpdateMatarix();
+			worldTransformBlock->TransferMatrix();
+		}
+	}
+
+	skydome->Update();
+
+	cameraController_->Update();
+
+	viewProjection_.TransferMatrix();
+
+	CheckAllCollisions();
+
+	for (Enemy* enemy : enemies_) {
+		enemy->Update();
+	}
+
+	if (dethParticles_) {
+		dethParticles_->Update();
+	}
 }
+
 
 void GameScene::Draw() {
 
@@ -262,38 +247,43 @@ void GameScene::Draw() {
 	/// </summary>
 	///
 
-	// 自キャラ
-	player_->Draw();
-	skydome->Draw();
-
-	for (Enemy* enemy : enemies_) {
-		enemy->Draw();
-	}
-
-	if (dethParticles_) {
-		dethParticles_->Draw();
-	}
-
-	if (!player_->IsDead()) {
-		player_->Draw();
-	}
-
 	switch (phace_) {
-	case GameScene::Phase::kPlay:;
-		// 自キャラの描画
+	case Phase::kPlay:;
+		
+		// 自キャラ
 		player_->Draw();
-		break;
-	case GameScene::Phase::kDeath:
+		skydome->Draw();
 
-		break;
-	}
-
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-			if (!worldTransformBlock)
-				continue;
-			modelBlock_->Draw(*worldTransformBlock, viewProjection_);
+		for (Enemy* enemy : enemies_) {
+			enemy->Draw();
 		}
+
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+		    for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+				modelBlock_->Draw(*worldTransformBlock, viewProjection_);
+			}
+		}
+		break;
+	case Phase::kDeath:
+
+		skydome->Draw();
+		dethParticles_->Draw();
+
+		for (Enemy* enemy : enemies_) {
+			enemy->Draw();
+		}
+
+		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
+			for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+				if (!worldTransformBlock)
+					continue;
+				modelBlock_->Draw(*worldTransformBlock, viewProjection_);
+			}
+		}
+
+		break;
 	}
 
 	// 3Dオブジェクト描画後処理
