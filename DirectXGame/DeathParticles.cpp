@@ -16,6 +16,11 @@ void DeathParticles::Initialize(Model* model, ViewProjection* viewProjection, co
 
 //パーティクル消える時間
 void DeathParticles::Update() {
+	
+	if (isFinished_) {
+		return;
+	}
+
 	counter_ += 1.0f / 60.0f;
 	if (counter_ >= kDuration) {
 		counter_ = kDuration;
