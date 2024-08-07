@@ -133,6 +133,7 @@ void GameScene::Update() {
 		// 自キャラの更新
 		player_->Update();
 		if (player_->IsDead()) {
+			ChangePhase();
 			// 死亡演出フェーズに切り替え
 			phase_ = Phase::kDeath;
 			// 自キャラの座標を取得
@@ -184,6 +185,7 @@ void GameScene::Update() {
 		break;
 	case Phase::kDeath:
 		// デス演出フェースの処理
+
 #ifdef _DEBUG
 
 		if (input_->TriggerKey(DIK_SPACE)) {
