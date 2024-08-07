@@ -100,7 +100,7 @@ private: // メンバ変数
 
 	DeathParticles* deathParticles_ = nullptr;
 
-	Phase phace_;
+	Phase phase_;
 
 	/// <summary>
 	/// ゲームシーン用

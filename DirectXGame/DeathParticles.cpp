@@ -16,6 +16,9 @@ void DeathParticles::Initialize(Model* model, ViewProjection* viewProjection, co
 
 void DeathParticles::Update() {
 
+	if (isFinished_) {
+		return;
+	}
 	// パーティクル消える時間
 	counter_ += 1.0f / 60.0f;
 	if (counter_ >= kDuration) {
@@ -41,19 +44,16 @@ void DeathParticles::Update() {
 	for (auto& worldTransform : worldTransform_) {
 		worldTransform.UpdateMatarix();
 	}
-
-	if (isFinished_) {
-		return;
-	}
 }
 
 void DeathParticles::Draw() {
+	
+	if (isFinished_) {
+		return;
+	}
+	
 	// モデルの描画
 	for (const auto& worldTransform : worldTransform_) {
 		model_->Draw(worldTransform, *viewProjection_, &objectColor_);
-	}
-
-	if (isFinished_) {
-		return;
 	}
 }
