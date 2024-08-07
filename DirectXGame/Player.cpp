@@ -90,7 +90,8 @@ AABB Player::GetAABB() {
 void Player::OnCollision(const Enemy* enemy) {
 	(void)enemy;
 	// ジャンプ開始
-	velocity_ += Vector3(0, kJumpAcceleration / 1.0f, 0);
+	//velocity_ += Vector3(0, kJumpAcceleration / 1.0f, 0);
+	isDead_ = true;
 }
 
 void Player::MovePlayer() {

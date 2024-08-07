@@ -61,6 +61,8 @@ public:
 
 	void OnCollision(const Enemy* enemy);
 
+	bool IsDead() const { return isDead_; }
+
 private:
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
@@ -82,6 +84,8 @@ private:
 
 	// 設置状態フラグ
 	bool onGround_ = true;
+
+	bool isDead_ = false;
 
 	Vector3 worldPos_;
 	float radius_;

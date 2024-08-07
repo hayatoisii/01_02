@@ -18,6 +18,9 @@
 /// <summary>
 /// ゲームシーン
 /// </summary>
+
+class DethPertcles;
+ 
 class GameScene {
 
 public: // メンバ関数
@@ -25,10 +28,6 @@ public: // メンバ関数
 	/// コンストクラタ
 	/// </summary>
 	GameScene();
-
-
-	bool isDebugCameraActive_ = false;
-	DebugCamera* debugCamera_ = nullptr;
 
 	Player* player_ = nullptr;
 	Skydome* skydome = nullptr;
@@ -47,6 +46,8 @@ public: // メンバ関数
 
 	void CheckAllCollisions();
 
+	void ChangePhase();
+
 	std::list<Enemy*> enemies_;
 
 	// ワールドビュー
@@ -64,6 +65,7 @@ public: // メンバ関数
 
 	bool finished_ = false;
 
+	bool IsFinished() const { return finished_; }
 
 	/// <summary>
 	/// デストラクタ
@@ -91,9 +93,14 @@ public: // メンバ関数
 
 private: // メンバ変数
 
+	bool isDebugCameraActive_ = false;
+	DebugCamera* debugCamera_ = nullptr;
+
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
+
+	DeathParticles* deathParticles_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用
