@@ -129,7 +129,6 @@ void GameScene::Update() {
 	switch (phase_) {
 	case Phase::kPlay:
 		// ゲームプレイフェーズの処理
-
 		// 自キャラの更新
 		player_->Update();
 		if (player_->IsDead()) {
@@ -230,6 +229,8 @@ void GameScene::Update() {
 		if (dethParticles_) {
 			dethParticles_->Update();
 		}
+
+		ChangePhase();
 
 	}
 }
