@@ -7,7 +7,7 @@ TitleSence::~TitleSence() { delete titlemodel_; }
 
 void TitleSence::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
-	titlemodel_ = Model::CreateFromOBJ("SugoiMan", true);
+	titlemodel_ = Model::CreateFromOBJ("player", true);
 	titleWorldTransform_.Initialize();
 	viewProjection_.Initialize();
 	Timer_ = 0.0f;
