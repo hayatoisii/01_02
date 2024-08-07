@@ -49,6 +49,8 @@ public: // メンバ関数
 
 	void ChangePhase();
 
+	bool IsFinished() const { return finished_; }
+
 	std::list<Enemy*> enemies_;
 
 	// ワールドビュー

@@ -3,7 +3,7 @@
 
 void TitleScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
-	titlemodel_ = Model::CreateFromOBJ("SugoiMan", true);
+	titlemodel_ = Model::CreateFromOBJ("enemy");
 	titleWorldTransform_.Initialize();
 	viewProjection_.Initialize();
 	Timer_ = 0.0f;
@@ -28,11 +28,13 @@ void TitleScene::Update() {
 }
 
 void TitleScene::Draw() {
+	/*
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
+	
 	Model::PreDraw(commandList);
 
 	titlemodel_->Draw(titleWorldTransform_, viewProjection_);
 
-	Model::PostDraw();
+	Model::PostDraw();*/
 }
