@@ -61,6 +61,8 @@ public:
 
 	void OnCollision(const Enemy* enemy);
 
+	bool IsDead() const { return isDead_; }
+
 private:
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
@@ -85,6 +87,8 @@ private:
 
 	Vector3 worldPos_;
 	float radius_;
+	
+	bool isDead_ = false;
 
 	static inline const float kAcceleration = 0.2f;
 	static inline const float kAttenuation = 0.2f;

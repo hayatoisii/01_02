@@ -47,6 +47,8 @@ public: // メンバ関数
 
 	void CheckAllCollisions();
 
+	void ChangePhase();
+
 	std::list<Enemy*> enemies_;
 
 	// ワールドビュー
