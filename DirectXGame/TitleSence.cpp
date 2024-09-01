@@ -7,10 +7,10 @@ TitleSence::~TitleSence() { delete titlemodel_; }
 
 void TitleSence::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
-	titlemodel_ = Model::CreateFromOBJ("player", true);
+	titlemodel_ = Model::CreateFromOBJ("SPACE", true);
 	titleWorldTransform_.Initialize();
 	viewProjection_.Initialize();
-	Timer_ = 0.0f;
+	Timer_ = 10.0f;
 
 	// タイトルを近づける
 	titleWorldTransform_.translation_ = {-1.0f, 1.0f, -40.0f}; // z値を調整して近づける

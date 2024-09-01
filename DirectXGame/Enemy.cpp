@@ -23,9 +23,10 @@ void Enemy::Update() {
 	worldTransform_.translation_.y += velocity_.y;
 	worldTransform_.translation_.z += velocity_.z;
 
-	walkTimer_ += 1.0f / 60.0f;
-	worldTransform_.rotation_.x = std::sin(std::numbers::pi_v<float> * 2.0f * walkTimer_ / kWalkMotionTime);
-	
+
+	worldTransform_.translation_.x = 27.0f;
+	worldTransform_.translation_.y = 10.0f;
+
 	worldTransform_.UpdateMatarix(); 
 }
 
