@@ -40,7 +40,6 @@ void DeathParticles::Update() {
 	objectColor_.SetColor(color_);
 	objectColor_.TransferMatrix();
 
-	// ワールド変換の更新
 	for (auto& worldTransform : worldTransform_) {
 		worldTransform.UpdateMatarix();
 	}
