@@ -13,6 +13,10 @@ void CameraController::Update() {
 	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
 	const Vector3& targetVelocity = target_->GetVelocity();
 
+	// X軸方向にカメラを向けるためにカメラの回転行列を設定
+	// カメラをX軸方向に向ける（Y軸周りに90度回転）
+	viewProjection_.rotation_.y = 89.5f; 
+
 	// 追従対象とオフセットから目標座標を計算
 	targetPosition_.x = targetWorldTransform.translation_.x + targetOffset_.x + targetVelocity.x * kVelocityBias;
 	targetPosition_.y = targetWorldTransform.translation_.y + targetOffset_.y + targetVelocity.y * kVelocityBias;
@@ -23,7 +27,7 @@ void CameraController::Update() {
 	targetPosition_.x = (std::min)(targetPosition_.x, targetWorldTransform.translation_.x + margin_.right);
 	targetPosition_.y = (std::max)(targetPosition_.y, targetWorldTransform.translation_.y - margin_.bottom);
 	targetPosition_.y = (std::min)(targetPosition_.y, targetWorldTransform.translation_.y + margin_.top);
-
+					
 	// 座標補間によりゆったり追従
 	viewProjection_.translation_ = Lerp(viewProjection_.translation_, targetPosition_, kInterpolationRate);
 
@@ -39,6 +43,7 @@ void CameraController::Update() {
 	// デバッグ出力
 	std::cerr << "Camera Position: (" << viewProjection_.translation_.x << ", " << viewProjection_.translation_.y << ", " << viewProjection_.translation_.z << ")" << std::endl;
 }
+
 
 void CameraController::Reset() {
 	if (!target_) {

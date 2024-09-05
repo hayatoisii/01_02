@@ -87,7 +87,7 @@ void GameScene::Initialize() {
 	cameraController_ = new CameraController();
 	cameraController_->Initialize();
 	cameraController_->setTarget(player_);
-	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
+	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 12.0f}; // Y軸方向も拡大
 	cameraController_->SetMovableArea(cameraArea);
 	cameraController_->Reset();
 
