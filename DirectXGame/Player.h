@@ -55,6 +55,8 @@ public:
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 
+	void RotatePlayer(float rotationSpeed);
+
 	Vector3 GetWorldPosition();
 
 	AABB GetAABB();
@@ -92,7 +94,7 @@ private:
 
 	static inline const float kAcceleration = 0.2f;
 	static inline const float kAttenuation = 0.2f;
-	static inline const float kJumpAcceleration = 1.5f;
+	static inline const float kJumpAcceleration = 0.5f;
 	static inline const float kGravityAcceleration = 0.07f;
 	static inline const float kAttenuationWall = 0.2f;
 	static inline const float kAttenuationLanding = 0.7f;

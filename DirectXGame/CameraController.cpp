@@ -11,16 +11,15 @@ void CameraController::Update() {
 	}
 
 	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
-	const Vector3& targetVelocity = target_->GetVelocity();
 
-	viewProjection_.rotation_.y = 89.5f;
-	//viewProjection_.rotation_.y -= 0.01f;
+	// カメラの回転角度を設定
+	viewProjection_.rotation_.y = 0.0f;
 	viewProjection_.rotation_.x = -69.4f;
 
 	// 追従対象とオフセットから目標座標を計算
-	targetPosition_.x = targetWorldTransform.translation_.x + targetOffset_.x + targetVelocity.x * kVelocityBias;
-	targetPosition_.y = targetWorldTransform.translation_.y + targetOffset_.y + targetVelocity.y * kVelocityBias;
-	targetPosition_.z = targetWorldTransform.translation_.z + targetOffset_.z + targetVelocity.z * kVelocityBias;
+	targetPosition_.x = targetWorldTransform.translation_.x + targetOffset_.x;
+	targetPosition_.y = targetWorldTransform.translation_.y + targetOffset_.y;
+	targetPosition_.z = targetWorldTransform.translation_.z + targetOffset_.z;
 
 	// 追従対象が画面外に出ないように補正
 	targetPosition_.x = (std::max)(targetPosition_.x, targetWorldTransform.translation_.x - margin_.left);
@@ -28,16 +27,12 @@ void CameraController::Update() {
 	targetPosition_.y = (std::max)(targetPosition_.y, targetWorldTransform.translation_.y - margin_.bottom);
 	targetPosition_.y = (std::min)(targetPosition_.y, targetWorldTransform.translation_.y + margin_.top);
 
-	// 直接目標座標にカメラを追従させる
+	// カメラを即座に目標座標に追従させる（慣性を排除）
 	viewProjection_.translation_ = targetPosition_;
 
-	// 移動範囲制限
-	viewProjection_.translation_.x = (std::max)(viewProjection_.translation_.x, movableArea_.left);
-	viewProjection_.translation_.x = (std::min)(viewProjection_.translation_.x, movableArea_.right);
 
 	// 行列を更新する
 	viewProjection_.UpdateMatrix();
-
 	// デバッグ出力
 	std::cerr << "Camera Position: (" << viewProjection_.translation_.x << ", " << viewProjection_.translation_.y << ", " << viewProjection_.translation_.z << ")" << std::endl;
 }

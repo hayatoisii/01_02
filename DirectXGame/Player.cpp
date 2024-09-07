@@ -25,6 +25,9 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 
 void Player::Update() {
 
+	float rotationSpeed = 0.04f; // 回転速度を調整
+	RotatePlayer(rotationSpeed);
+
 	worldTransform_.TransferMatrix();
 
 	MovePlayer();
@@ -58,6 +61,8 @@ void Player::Update() {
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrdDirection_)];
 		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
 	}
+
+
 
 }
 
@@ -99,7 +104,7 @@ void Player::MovePlayer() {
 	// 移動入力
 	if (onGround_) {
 		// 左右移動操作
-		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) {
+		if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT) || Input::GetInstance()->PushKey(DIK_UP) || Input::GetInstance()->PushKey(DIK_DOWN)) {
 
 			// 左右加速
 			Vector3 acceleration = {};
@@ -132,19 +137,30 @@ void Player::MovePlayer() {
 					turnTimer_ = kLimitRunSpeed;
 				}
 			}
+
+			// Z軸方向の操作（前後移動）
+			if (Input::GetInstance()->PushKey(DIK_UP)) {
+				acceleration.z += kAcceleration;
+			} else if (Input::GetInstance()->PushKey(DIK_DOWN)) {
+				acceleration.z -= kAcceleration;
+			}
+
 			// 加速/減速
 			velocity_.x += acceleration.x;
+			velocity_.z += acceleration.z;
 
 			// 最大速度制限
 			velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed, kLimitRunSpeed);
+			velocity_.z = std::clamp(velocity_.z, -kLimitRunSpeed, kLimitRunSpeed);
 		} else {
 
 			velocity_.x *= (1.0f - kAttenuation);
+			velocity_.z *= (1.0f - kAttenuation);
 		}
 		if (Input::GetInstance()->PushKey(DIK_UP)) {
 
 			// ジャンプ初速
-			velocity_.y += kJumpAcceleration;
+			//velocity_.y += kJumpAcceleration;
 			// 空中
 		}
 	} else {
@@ -153,6 +169,7 @@ void Player::MovePlayer() {
 		// 落下速度制限
 		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 	}
+
 }
 
 void Player::CeilingContact(const CollisionMapInfo& info) {
@@ -411,4 +428,15 @@ Vector3 Player::CornerPosition(const Vector3& center, Corner corner) {
 	};
 
 	return center + offsetTable[static_cast<uint32_t>(corner)];
+}
+
+
+// 例えば、回転速度や回転量を加算して回転を行う
+void Player::RotatePlayer(float rotationSpeed) {
+	// 回転を加算する（Y軸回転）
+	worldTransform_.rotation_.z += rotationSpeed;
+
+	// 必要に応じて、他の軸での回転も加えることができます
+	// worldTransform_.rotation_.x += rotationSpeedX;
+	// worldTransform_.rotation_.z += rotationSpeedZ;
 }

@@ -34,6 +34,6 @@ public:
 
 private:
 	ViewProjection viewProjection_;
-	Vector3 targetOffset_ = {0, -15, .0f};
+	Vector3 targetOffset_ = {0, -15, -15.0f};
 	Vector3 targetPosition_; // 目標座標を追加
 };

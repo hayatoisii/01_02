@@ -54,7 +54,7 @@ void GameScene::Initialize() {
 
 	// Mapのよみこみ
 	mapChipField_->LoadMapChipCsv("Resources/map.csv");
-	modelPlayer_ = Model::CreateFromOBJ("player", true);
+	modelPlayer_ = Model::CreateFromOBJ("asi", true);
 	modelEnemy_ = Model::CreateFromOBJ("enemy");
 	modelBlock_ = Model::CreateFromOBJ("block");
 	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
@@ -160,7 +160,7 @@ void GameScene::Update() {
 		}
 #endif
 
-		if (isDebugCameraActive_) {
+		if (!isDebugCameraActive_) {
 			debugCamera_->Update();
 			viewProjection_.matView = debugCamera_->GetViewProjection().matView;
 			viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
