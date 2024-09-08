@@ -92,8 +92,8 @@ private:
 	Vector3 worldPos_;
 	float radius_;
 
-	static inline const float kAcceleration = 0.2f;
-	static inline const float kAttenuation = 0.2f;
+	static inline const float kAcceleration = 0.1f;
+	static inline const float kAttenuation = 0.05f;
 	static inline const float kJumpAcceleration = 0.5f;
 	static inline const float kGravityAcceleration = 0.07f;
 	static inline const float kAttenuationWall = 0.2f;

@@ -1,5 +1,7 @@
 #include "Enemy2.h"
 #include <numbers>
+#include <dinput.h>
+
 
 // 初期化
 void Enemy2::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& pos) {
@@ -12,7 +14,7 @@ void Enemy2::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 	worldTransform_.rotation_.y = std::numbers::pi_v<float> * 3.0f / 2.0f;
 	viewProjection_ = viewProjection;
 
-	velocity_ = {-kWalkSpeed, 0, 0};
+	velocity_ = {0, 0, -kWalkSpeed};
 	walkTimer_ = 0.0f;
 }
 
@@ -21,35 +23,40 @@ void Enemy2::Update() {
 	worldTransform_.translation_.x += velocity_.x;
 	worldTransform_.translation_.y += velocity_.y;
 	worldTransform_.translation_.z += velocity_.z;
-	//worldTransform_.rotation_.y = -270.2f;
-	worldTransform_.rotation_.y = -90.2f;
+	worldTransform_.rotation_.y = -270.2f;
+	//worldTransform_.rotation_.y = 91.1f;
 
-// 回転を制御する
+    // 回転を制御する
 	static float totalRotation = 0.0f;   // 現在の回転量
-	static float rotationSpeed = 0.008f; // 回転速度
+	static float rotationSpeed = 0.006f; // 回転速度
 	static bool isRotatingRight = true;  // 右回転中かどうか
 
-	// 右回転または中央に戻るチェック
+	// 右回転または左回転のチェック
 	if (isRotatingRight) {
-		// 右に回転（45度まで）
+		// 右に回転（40度まで）
 		RotateEnemy(rotationSpeed);
 		totalRotation += rotationSpeed;
 
-		// 45度以上回転したら反転して中央に戻る動作に切り替え
-		if (totalRotation >= std::numbers::pi_v<float> / 4.0f) {
-			isRotatingRight = false; // 中央に戻す動作に切り替え
+		// 40度以上回転したら左回転に切り替える
+		if (totalRotation >= (34.0f * std::numbers::pi_v<float> / 180.0f)) {
+			isRotatingRight = false; // 左回転に切り替え
 		}
 	} else {
-		// 中央に戻る（回転量が0になるまで）
+		// 左に回転（40度まで）
 		RotateEnemy(-rotationSpeed);
 		totalRotation -= rotationSpeed;
 
-		// 回転量が0に戻ったら再び右回転に切り替える
-		if (totalRotation <= 0.0f) {
-			isRotatingRight = true; // 再び右回転に切り替え
+		// -40度以上回転したら右回転に切り替える
+		if (totalRotation <= -(34.0f * std::numbers::pi_v<float> / 180.0f)) {
+			isRotatingRight = true; // 右回転に切り替え
 		}
 	}
 
+	
+		if (worldTransform_.translation_.z < -60) {
+		worldTransform_.translation_.z = 70;
+		}
+	
 
 	worldTransform_.UpdateMatarix();
 }

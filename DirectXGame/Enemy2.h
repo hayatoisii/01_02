@@ -5,6 +5,8 @@
 #include "Model.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
+#include "Input.h"
+
 
 class MapChipField;
 class Player;
@@ -42,6 +44,8 @@ private:
 	// 速度
 	Vector3 velocity_ = {};
 
+	Input* input_ = nullptr;
+
 	static inline const float kWalkSpeed = 0.05f;
 	static inline const float kWalkMotionAngleStart = -1.0f;
 	static inline const float kWalkMontionAngleEnd = 1.5f;
@@ -49,4 +53,6 @@ private:
 	float walkTimer_ = 0.0f;
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
+
 };
+

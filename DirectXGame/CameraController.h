@@ -32,8 +32,11 @@ public:
 
 	const ViewProjection& GetViewProjection() const { return viewProjection_; }
 
+	float yaw_ = 0.0f;
+
 private:
 	ViewProjection viewProjection_;
-	Vector3 targetOffset_ = {0, -15, -15.0f};
+	//Vector3 targetOffset_ = {0, -15, -11.0f};
+	Vector3 targetOffset_ = {-7.0f, -0.4f, -16.0f};
 	Vector3 targetPosition_; // 目標座標を追加
 };

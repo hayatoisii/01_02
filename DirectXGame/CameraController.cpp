@@ -13,8 +13,8 @@ void CameraController::Update() {
 	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
 
 	// カメラの回転角度を設定
-	viewProjection_.rotation_.y = 0.0f;
-	viewProjection_.rotation_.x = -69.4f;
+	//viewProjection_.rotation_.y = 0.4f;
+	viewProjection_.rotation_.x = -69.48f;
 
 	// 追従対象とオフセットから目標座標を計算
 	targetPosition_.x = targetWorldTransform.translation_.x + targetOffset_.x;

@@ -19,9 +19,10 @@ GameScene::~GameScene() {
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
-	for (Enemy2* enemy2 : enemies2_) {
-		delete enemy2;
+	for (Enemy2* enemy : enemies2_) {
+		delete enemy;
 	}
+
 	delete modelEnemy_;
 	enemies_.clear();
 	enemies2_.clear();
@@ -62,10 +63,7 @@ void GameScene::Initialize() {
 	modelEnemy_ = Model::CreateFromOBJ("asi");
 
 	// プレイヤーの初期位置の取得
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(20, 0);
-
-	// 敵の初期位置の取得
-	Vector3 enmyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(10, 5);
 
 	skydome->Initialize(modelSkydome_, &viewProjection_);
 	// プレイヤーの生成と初期化
@@ -75,9 +73,8 @@ void GameScene::Initialize() {
 
 	Enemy* newEnemy = new Enemy();
 	Enemy2* newEnemy2 = new Enemy2();
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 0);
-	Vector3 anchorPoint = enemyPosition + Vector3(0, 21, 0);
-	newEnemy->Initialize(modelEnemy_, &viewProjection_, anchorPoint);
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 11);
+	newEnemy->Initialize(modelEnemy_, &viewProjection_, enemyPosition + Vector3(20, 0, 0));
 	newEnemy2->Initialize(modelEnemy_, &viewProjection_, enemyPosition);
 	enemies_.push_back(newEnemy);
 	enemies2_.push_back(newEnemy2);
@@ -160,8 +157,8 @@ void GameScene::Update() {
 		for (Enemy* enemy : enemies_) {
 			enemy->Update();
 		}
-		for (Enemy2* enemy2 : enemies2_) {
-			enemy2->Update();
+		for (Enemy2* enemy : enemies2_) {
+			enemy->Update();
 		}
 
 #ifdef _DEBUG
@@ -286,8 +283,8 @@ void GameScene::Draw() {
 		for (Enemy* enemy : enemies_) {
 			enemy->Draw();
 		}
-		for (Enemy2* enemy2 : enemies2_) {
-			enemy2->Draw();
+		for (Enemy2* enemy : enemies2_) {
+			enemy->Draw();
 		}
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {

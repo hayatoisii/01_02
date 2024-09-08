@@ -30,12 +30,16 @@ public:
 
 	void RotateEnemy(float rotationSpeed);
 
+
 private:
 
 	// 3Dモデル
 	Model* model_ = nullptr;
 	// ワールドトランスフォーム
 	WorldTransform worldTransform_;
+
+	WorldTransform worldTransform2_;
+
 	// ビューポート
 	ViewProjection* viewProjection_ = nullptr;
 	// マップチップ
