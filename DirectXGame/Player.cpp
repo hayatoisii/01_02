@@ -27,6 +27,10 @@ void Player::Update() {
 
 	worldTransform_.TransferMatrix();
 
+
+	worldTransform_.rotation_.x += 0.005f;
+	worldTransform_.rotation_.y = 270.2f;
+
 	MovePlayer();
 
 	// 衝突情報を初期化
