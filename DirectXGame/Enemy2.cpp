@@ -21,6 +21,8 @@ void Enemy2::Update() {
 	worldTransform_.translation_.x += velocity_.x;
 	worldTransform_.translation_.y += velocity_.y;
 	worldTransform_.translation_.z += velocity_.z;
+	//worldTransform_.rotation_.y = -270.2f;
+	worldTransform_.rotation_.y = -90.2f;
 
 // 回転を制御する
 	static float totalRotation = 0.0f;   // 現在の回転量
@@ -85,5 +87,5 @@ void Enemy2::OnCollision(const Player* player) { (void)player; }
 // 例えば、回転速度や回転量を加算して回転を行う
 void Enemy2::RotateEnemy(float rotationSpeed) {
 	// 回転を加算する（Y軸回転）
-	worldTransform_.rotation_.z += rotationSpeed;
+	worldTransform_.rotation_.x += rotationSpeed;
 }
