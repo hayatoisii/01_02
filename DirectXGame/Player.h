@@ -103,7 +103,7 @@ private:
 	static inline const float kTimeTurn = 0.5f;
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
-	static inline const float kBlank = 18.0f;
+	static inline const float kBlank = 0.02f;
 	static inline const float kGroundSearchHeight = 0.06f;
 
 };
