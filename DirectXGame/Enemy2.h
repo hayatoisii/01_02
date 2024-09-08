@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Model.h"
-#include "WorldTransform.h"
-#include "ViewProjection.h"
 #include "AABB.h"
 #include "DebugText.h"
+#include "Model.h"
+#include "ViewProjection.h"
+#include "WorldTransform.h"
 
 class MapChipField;
 class Player;
 
-class Enemy {
+class Enemy2 {
 public:
 	// 初期化
 	void Initialize(Model* model, ViewProjection* viewProjection, const Vector3& pos);
@@ -31,7 +31,6 @@ public:
 	void RotateEnemy(float rotationSpeed);
 
 private:
-
 	// 3Dモデル
 	Model* model_ = nullptr;
 	// ワールドトランスフォーム
@@ -50,5 +49,4 @@ private:
 	float walkTimer_ = 0.0f;
 	static inline const float kWidth = 0.8f;
 	static inline const float kHeight = 0.8f;
-
 };

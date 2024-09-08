@@ -19,8 +19,12 @@ GameScene::~GameScene() {
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
+	for (Enemy2* enemy2 : enemies2_) {
+		delete enemy2;
+	}
 	delete modelEnemy_;
 	enemies_.clear();
+	enemies2_.clear();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
@@ -37,7 +41,6 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
@@ -50,18 +53,16 @@ void GameScene::Initialize() {
 
 	deathParticles_ = new DeathParticles;
 
-
-
 	// Mapのよみこみ
 	mapChipField_->LoadMapChipCsv("Resources/map.csv");
-	modelPlayer_ = Model::CreateFromOBJ("asi", true);
-	modelEnemy_ = Model::CreateFromOBJ("enemy");
+	modelPlayer_ = Model::CreateFromOBJ("player", true);
 	modelBlock_ = Model::CreateFromOBJ("block");
 	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
 	modelParticles_ = Model::CreateFromOBJ("deathParticle", true);
+	modelEnemy_ = Model::CreateFromOBJ("asi");
 
 	// プレイヤーの初期位置の取得
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(20, 0);
 
 	// 敵の初期位置の取得
 	Vector3 enmyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
@@ -71,11 +72,17 @@ void GameScene::Initialize() {
 	player_->SetMapChipField(mapChipField_);
 	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
 
-	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(18, 18);
-	Enemy* newEnemy = new Enemy();
-	newEnemy->Initialize(modelEnemy_, &viewProjection_, enemyPosition);
-	enemies_.push_back(newEnemy);
 
+	Enemy* newEnemy = new Enemy();
+	Enemy2* newEnemy2 = new Enemy2();
+	Vector3 enemyPosition = mapChipField_->GetMapChipPositionByIndex(20, 0);
+	Vector3 anchorPoint = enemyPosition + Vector3(0, 21, 0);
+	newEnemy->Initialize(modelEnemy_, &viewProjection_, anchorPoint);
+	newEnemy2->Initialize(modelEnemy_, &viewProjection_, enemyPosition);
+	enemies_.push_back(newEnemy);
+	enemies2_.push_back(newEnemy2);
+
+     
 	// パーティクル生成
 	dethParticles_ = new DeathParticles;
 	dethParticles_->Initialize(modelParticles_, &viewProjection_, playerPosition);
@@ -149,8 +156,12 @@ void GameScene::Update() {
 
 		CheckAllCollisions();
 
+
 		for (Enemy* enemy : enemies_) {
 			enemy->Update();
+		}
+		for (Enemy2* enemy2 : enemies2_) {
+			enemy2->Update();
 		}
 
 #ifdef _DEBUG
@@ -274,6 +285,9 @@ void GameScene::Draw() {
 
 		for (Enemy* enemy : enemies_) {
 			enemy->Draw();
+		}
+		for (Enemy2* enemy2 : enemies2_) {
+			enemy2->Draw();
 		}
 
 		for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {

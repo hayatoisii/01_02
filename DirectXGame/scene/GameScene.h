@@ -12,6 +12,7 @@
 #include "MapChipField.h"
 #include "CameraController.h"
 #include "Enemy.h"
+#include "Enemy2.h"
 #include "AABB.h"
 #include "DeathParticles.h"
 
@@ -55,6 +56,7 @@ public: // メンバ関数
 	void ChangePhase();
 
 	std::list<Enemy*> enemies_;
+	std::list<Enemy2*> enemies2_;
 
 	// ワールドビュー
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
