@@ -22,19 +22,54 @@ GameScene::GameScene() {
 }
 
 GameScene::~GameScene() {
-	delete debugCamera_;
-	delete player_;
-	delete skydome;
-	delete mapChipField_;
-	delete modelPlayer_;
-	delete modelBlock_;
-	delete modelSkydome_;
-	delete cameraController_;
+	// ポインタの解放と nullptr 代入
+	if (debugCamera_) {
+		delete debugCamera_;
+		debugCamera_ = nullptr;
+	}
 
+	if (player_) {
+		delete player_;
+		player_ = nullptr;
+	}
+
+	if (skydome) {
+		delete skydome;
+		skydome = nullptr;
+	}
+
+	if (mapChipField_) {
+		delete mapChipField_;
+		mapChipField_ = nullptr;
+	}
+
+	if (modelPlayer_) {
+		delete modelPlayer_;
+		modelPlayer_ = nullptr;
+	}
+
+	if (modelBlock_) {
+		delete modelBlock_;
+		modelBlock_ = nullptr;
+	}
+
+	if (modelSkydome_) {
+		delete modelSkydome_;
+		modelSkydome_ = nullptr;
+	}
+
+	if (cameraController_) {
+		delete cameraController_;
+		cameraController_ = nullptr;
+	}
+
+	// ブロックの解放
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;
+			worldTransformBlock = nullptr;
 		}
+		worldTransformBlockLine.clear();
 	}
 	worldTransformBlocks_.clear();
 }
