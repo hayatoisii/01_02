@@ -1,7 +1,9 @@
 #include "CameraController.h"
 #include "Player.h"
-#include <algorithm>
+#include <cmath> // sin, cos
 #include <iostream>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 void CameraController::Initialize() { viewProjection_.Initialize(); }
 
@@ -10,46 +12,23 @@ void CameraController::Update() {
 		return;
 	}
 
-	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
-	const Vector3& targetVelocity = target_->GetVelocity();
+	// 回転角度（時間経過に応じて増加）
+	static float angle = 0.0f;
+	const float radius = 10.0f; // カメラの回転半径
+	const float speed = 0.01f;  // 回転速度
 
-	// 追従対象とオフセットから目標座標を計算
-	targetPosition_.x = targetWorldTransform.translation_.x + targetOffset_.x + targetVelocity.x * kVelocityBias;
-	targetPosition_.y = targetWorldTransform.translation_.y + targetOffset_.y + targetVelocity.y * kVelocityBias;
-	targetPosition_.z = targetWorldTransform.translation_.z + targetOffset_.z + targetVelocity.z * kVelocityBias;
+	// Z軸を中心に円を描くようにカメラ位置を更新
+	viewProjection_.translation_.x = radius * cos(angle); // X座標を更新
+	viewProjection_.translation_.y = 0.0f;                // Y座標は固定
+	viewProjection_.translation_.z = radius * sin(angle); // Z座標を更新
+	viewProjection_.rotation_.y += 0.01f;
+	viewProjection_.rotation_.x += 0.01f;
 
-	// 追従対象が画面外に出ないように補正
-	targetPosition_.x = (std::max)(targetPosition_.x, targetWorldTransform.translation_.x - margin_.left);
-	targetPosition_.x = (std::min)(targetPosition_.x, targetWorldTransform.translation_.x + margin_.right);
-	targetPosition_.y = (std::max)(targetPosition_.y, targetWorldTransform.translation_.y - margin_.bottom);
-	targetPosition_.y = (std::min)(targetPosition_.y, targetWorldTransform.translation_.y + margin_.top);
-
-	// 座標補間によりゆったり追従
-	viewProjection_.translation_ = Lerp(viewProjection_.translation_, targetPosition_, kInterpolationRate);
-
-	// 移動範囲制限
-	viewProjection_.translation_.x = (std::max)(viewProjection_.translation_.x, movableArea_.left);
-	viewProjection_.translation_.x = (std::min)(viewProjection_.translation_.x, movableArea_.right);
-	viewProjection_.translation_.y = (std::max)(viewProjection_.translation_.y, movableArea_.bottom);
-	viewProjection_.translation_.y = (std::min)(viewProjection_.translation_.y, movableArea_.top);
-
-	// 行列を更新する
-	viewProjection_.UpdateMatrix();
-
-	// デバッグ出力
-	std::cerr << "Camera Position: (" << viewProjection_.translation_.x << ", " << viewProjection_.translation_.y << ", " << viewProjection_.translation_.z << ")" << std::endl;
-}
-
-void CameraController::Reset() {
-	if (!target_) {
-		return;
+	angle += speed;
+	if (angle >= 2 * static_cast<float>(M_PI)) { // M_PIをfloatにキャスト
+		angle -= 2 * static_cast<float>(M_PI);
 	}
 
-	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
-
-	viewProjection_.translation_.x = targetWorldTransform.translation_.x + targetOffset_.x;
-	viewProjection_.translation_.y = targetWorldTransform.translation_.y + targetOffset_.y;
-	viewProjection_.translation_.z = targetWorldTransform.translation_.z + targetOffset_.z;
-
+	// 行列を更新する
 	viewProjection_.UpdateMatrix();
 }

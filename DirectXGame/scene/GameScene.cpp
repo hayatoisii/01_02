@@ -118,8 +118,6 @@ void GameScene::Initialize() {
 	cameraController_->Initialize();
 	cameraController_->setTarget(player_);
 	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
-	cameraController_->SetMovableArea(cameraArea);
-	cameraController_->Reset();
 }
 
 
@@ -134,12 +132,12 @@ void GameScene::Update() {
 
 	if (isDebugCameraActive_) {
 		debugCamera_->Update();
-		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+
 
 	} else {
 		viewProjection_.matView = cameraController_->GetViewProjection().matView;
 		viewProjection_.matProjection = cameraController_->GetViewProjection().matProjection;
+		playerPos.x = ;
 	}
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
