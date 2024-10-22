@@ -9,6 +9,8 @@
 #include <cassert>
 #include <iostream>
 #include <numbers>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 
 void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vector3& position) {
@@ -25,43 +27,48 @@ void Player::Initialize(Model* model, ViewProjection* viewProjection, const Vect
 }
 
 void Player::Update() {
+	// 回転角度（時間経過に応じて増加）
+	static float angle = 0.0f;
+	const float radius = 10.0f; // プレイヤーの回転半径
+	const float speed = 0.01f;  // 回転速度
 
+	// Z軸を中心に円を描くようにプレイヤー位置を更新
+	worldTransform_.translation_.x = radius * cos(angle); // X座標を更新
+	worldTransform_.translation_.y = 0.0f;                // Y座標は固定
+	worldTransform_.translation_.z = radius * sin(angle); // Z座標を更新
+
+	angle += speed;
+	if (angle >= 2 * static_cast<float>(M_PI)) { // M_PIをfloatにキャスト
+		angle -= 2 * static_cast<float>(M_PI);
+	}
+
+	// 行列を更新する
 	worldTransform_.TransferMatrix();
 
+	// プレイヤーの他の処理
 	MovePlayer();
-
-	// 衝突情報を初期化
+	// 衝突処理など他のロジック
 	CollisionMapInfo collisionMapInfo;
-	// 移動量に速度の値をコピー
 	collisionMapInfo.movement = velocity_;
 	collisionMapInfo.landingFlag = false;
 	collisionMapInfo.wallContactFlag = false;
-	// マップ衝突チェック
 	CheckMapCollision(collisionMapInfo);
-
 	JudgmentMove(collisionMapInfo);
-
 	CeilingContact(collisionMapInfo);
-
 	GraundSetting(collisionMapInfo);
-
 
 	worldTransform_.UpdateMatarix();
 
-	//旋回
+	// 旋回処理
 	if (turnTimer_ > 0.0f) {
-
 		turnTimer_ -= static_cast<float>(1.0f) / 60.0f;
 
-		float destinationRotationYTable[] = {
-		    std::numbers::pi_v<float> / 2.0f, std::numbers::pi_v<float> * 3.0f / 2.0f
-
-		};
+		float destinationRotationYTable[] = {std::numbers::pi_v<float> / 2.0f, std::numbers::pi_v<float> * 3.0f / 2.0f};
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrdDirection_)];
 		worldTransform_.rotation_.y = EaseInOut(destinationRotationY, turnFirstRotationY_, turnTimer_ / kTimeTurn);
 	}
-
 }
+
 
 void Player::Draw() {
 

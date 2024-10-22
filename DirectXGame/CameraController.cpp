@@ -27,11 +27,6 @@ void CameraController::Update() {
 	// 座標補間によりゆったり追従
 	viewProjection_.translation_ = Lerp(viewProjection_.translation_, targetPosition_, kInterpolationRate);
 
-	// 移動範囲制限
-	viewProjection_.translation_.x = (std::max)(viewProjection_.translation_.x, movableArea_.left);
-	viewProjection_.translation_.x = (std::min)(viewProjection_.translation_.x, movableArea_.right);
-	viewProjection_.translation_.y = (std::max)(viewProjection_.translation_.y, movableArea_.bottom);
-	viewProjection_.translation_.y = (std::min)(viewProjection_.translation_.y, movableArea_.top);
 
 	// 行列を更新する
 	viewProjection_.UpdateMatrix();
@@ -44,12 +39,5 @@ void CameraController::Reset() {
 	if (!target_) {
 		return;
 	}
-
-	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
-
-	viewProjection_.translation_.x = targetWorldTransform.translation_.x + targetOffset_.x;
-	viewProjection_.translation_.y = targetWorldTransform.translation_.y + targetOffset_.y;
-	viewProjection_.translation_.z = targetWorldTransform.translation_.z + targetOffset_.z;
-
 	viewProjection_.UpdateMatrix();
 }
