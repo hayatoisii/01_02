@@ -30,12 +30,15 @@ public: // メンバ関数
 
 	Player* player_ = nullptr;
 	Vector3 playerPos = {};
+	Vector3 playerPos2 = {};
 
 	Skydome* skydome = nullptr;
 
 	MapChipField* mapChipField_ = nullptr;
 
 	Model* modelPlayer_ = nullptr;
+
+	Model* modeltaitoru_ = nullptr;
 
 	Model* modelBlock_ = nullptr;
 
@@ -47,6 +50,8 @@ public: // メンバ関数
 	std::vector<std::vector<WorldTransform*>> worldTransformBlocks_;
 	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
+
+	std::list<Player*> playeres_;
 
 
 	/// <summary>

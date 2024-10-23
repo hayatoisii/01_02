@@ -10,12 +10,15 @@ void CameraController::Update() {
 		return;
 	}
 
-	const WorldTransform& targetWorldTransform = target_->GetWorldTransform();
-	const Vector3& targetVelocity = target_->GetVelocity();
+	const KamataEngine::WorldTransform& targetWorldTransform = target_->GetWorldTransform();
+	const KamataEngine::Vector3& targetVelocity = target_->GetVelocity();
+
+	// Offset to move the player lower in the camera's view (e.g., -2.0f for lower placement)
+	const float yOffset = -2.0f;
 
 	// 追従対象とオフセットから目標座標を計算
 	targetPosition_.x = targetWorldTransform.translation_.x + targetOffset_.x + targetVelocity.x * kVelocityBias;
-	targetPosition_.y = targetWorldTransform.translation_.y + targetOffset_.y + targetVelocity.y * kVelocityBias;
+	targetPosition_.y = targetWorldTransform.translation_.y + targetOffset_.y + targetVelocity.y * kVelocityBias + yOffset; // Apply yOffset
 	targetPosition_.z = targetWorldTransform.translation_.z + targetOffset_.z + targetVelocity.z * kVelocityBias;
 
 	// 追従対象が画面外に出ないように補正
@@ -25,15 +28,12 @@ void CameraController::Update() {
 	targetPosition_.y = (std::min)(targetPosition_.y, targetWorldTransform.translation_.y + margin_.top);
 
 	// 座標補間によりゆったり追従
-	viewProjection_.translation_ = Lerp(viewProjection_.translation_, targetPosition_, kInterpolationRate);
-
+	camera_.translation_ = Lerp(camera_.translation_, targetPosition_, kInterpolationRate);
 
 	// 行列を更新する
-	viewProjection_.UpdateMatrix();
-
-	// デバッグ出力
-	std::cerr << "Camera Position: (" << viewProjection_.translation_.x << ", " << viewProjection_.translation_.y << ", " << viewProjection_.translation_.z << ")" << std::endl;
+	camera_.UpdateMatrix();
 }
+
 
 void CameraController::Reset() {
 	if (!target_) {

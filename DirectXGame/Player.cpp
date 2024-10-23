@@ -34,8 +34,11 @@ void Player::Update() {
 
 	// Z軸を中心に円を描くようにプレイヤー位置を更新
 	worldTransform_.translation_.x = radius * cos(angle); // X座標を更新
-	worldTransform_.translation_.y = 0.0f;                // Y座標は固定
+	worldTransform_.translation_.y = radius * sin(angle); // Y座標は固定
 	worldTransform_.translation_.z = radius * sin(angle); // Z座標を更新
+	worldTransform_.rotation_.y += 0.02f;
+	worldTransform_.rotation_.x += 0.02f;
+
 
 	angle += speed;
 	if (angle >= 2 * static_cast<float>(M_PI)) { // M_PIをfloatにキャスト

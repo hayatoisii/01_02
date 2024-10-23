@@ -125,25 +125,24 @@ void GameScene::Initialize() {
 	// Mapのよみこみ
 	mapChipField_->LoadMapChipCsv("Resources/map.csv");
 
-
-	// 自キャラの生成
-	player_ = new Player;
-
 	modelPlayer_ = Model::CreateFromOBJ("player", true);
+
+	modeltaitoru_ = Model::CreateFromOBJ("block", true);
 
 	// 座標をマップチップ番号で指定
 	playerPos = mapChipField_->GetMapChipPositionByIndex(9, 9);
 
-	// 自キャラの初期化
-	player_->Initialize(modelPlayer_, &viewProjection_, playerPos);
+
 
 		// プレイヤーの初期位置の取得
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
+	Vector3 playerPosition2 = mapChipField_->GetMapChipPositionByIndex(5, 20);
 
-	// プレイヤーの生成と初期化
-	player_ = new Player();
-	player_->SetMapChipField(mapChipField_);
-	player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
+		player_ = new Player();
+		Player* player2_ = new Player;
+		player_->SetMapChipField(mapChipField_);
+		player_->Initialize(modelPlayer_, &viewProjection_, playerPosition);
+		player2_->Initialize(modelPlayer_, &viewProjection_, playerPosition2);
 
 	debugCamera_ = new DebugCamera(1280, 720);
 
@@ -187,8 +186,9 @@ void GameScene::Update() {
 		}
 	}
 
-	// 自キャラの更新
-	player_->Update();
+
+		player_->Update();
+    
 
 	skydome->Update();
 
@@ -227,9 +227,8 @@ void GameScene::Draw() {
 	/// </summary>
 	///
 
-
-	// 自キャラ
 	player_->Draw();
+	
 	skydome->Draw();
 
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
