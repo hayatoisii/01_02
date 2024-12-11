@@ -52,7 +52,7 @@ void GameScene::Initialize() {
 	mapChipField_->LoadMapChipCsv("Resources/map.csv");
 	modelPlayer_ = Model::CreateFromOBJ("player", true);
 	modelEnemy_ = Model::CreateFromOBJ("enemy");
-	modelBlock_ = Model::CreateFromOBJ("block");
+	modelBlock_ = Model::CreateFromOBJ("cube123");
 	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
 	modelParticles_ = Model::CreateFromOBJ("deathParticle", true);
 
