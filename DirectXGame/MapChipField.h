@@ -44,8 +44,8 @@ public:
 	private:
 
 			// 1ブロックのサイズ
-	    static inline const float kBlockWidth = 1.0f; // 2
-	    static inline const float kBlockHeight = 1.0f; // 2
+	    static inline const float kBlockWidth = 8.0f; // 2
+	    static inline const float kBlockHeight = 6.0f; // 2
 	    // ブロックの個数
 	    static inline const uint32_t kNumBlockVirtical = 20;
 	    static inline const uint32_t kNumBlockHorizontal = 100;
