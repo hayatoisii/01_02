@@ -25,7 +25,7 @@ public: // メンバ関数
 
 	
 
-	bool isDebugCameraActive_ = false;
+	bool isDebugCameraActive_ = true;
 	DebugCamera* debugCamera_ = nullptr;
 
 	Player* player = nullptr;
