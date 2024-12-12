@@ -74,6 +74,10 @@ void GameScene::Initialize() {
 	// 敵の初期位置の取得
 	Vector3 enmyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
 
+	    // マップチップの初期位置を取得
+	Vector3 mapChipPosition = mapChipField_->GetMapChipPositionByIndex(0, 0);
+
+
 	skydome->Initialize(modelSkydome_, &viewProjection_);
 	// プレイヤーの生成と初期化
 	player_->SetMapChipField(mapChipField_);
@@ -95,9 +99,7 @@ void GameScene::Initialize() {
 	cameraController_ = new CameraController();
 	cameraController_->Initialize();
 	cameraController_->setTarget(player_);
-	CameraController::Rect cameraArea = {12.0f, 100 - 12.0f, 6.0f, 6.0f};
-	cameraController_->SetMovableArea(cameraArea);
-	cameraController_->Reset();
+	cameraController_->SetTargetOffset({10.0f, 20.0f, -500.0f});
 }
 
 void GameScene::GenerateBlocks() {

@@ -72,9 +72,7 @@ public: // メンバ関数
 	};
 
 	Phase phace_;
-
 	bool finished_ = false;
-
 
 	/// <summary>
 	/// デストラクタ

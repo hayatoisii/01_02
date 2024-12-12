@@ -5,6 +5,7 @@
 #include "Vector3.h"
 #include "Viewprojection.h"
 #include "WorldTransform.h"
+#include <string>
 
 enum class MapChipType {
 	kBlank,  // 空白

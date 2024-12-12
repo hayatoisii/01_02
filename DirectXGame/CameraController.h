@@ -1,9 +1,11 @@
 #pragma once
+#include "MapChipField.h"
 #include "MathUtilityForText.h"
 #include "Vector3.h"
 #include "ViewProjection.h"
 
 class Player;
+class MapChipField;
 
 class CameraController {
 public:
@@ -25,15 +27,15 @@ public:
 	void Initialize();
 	void Update();
 	void Reset();
-
 	void SetMovableArea(const Rect& area) { movableArea_ = area; }
 	void SetMargin(const Rect& margin) { margin_ = margin; } // マージン設定メソッドを追加
 	void setTarget(Player* target) { target_ = target; }
+	void SetTargetOffset(const Vector3& offset) { targetOffset_ = offset; } // 追加
 
 	const ViewProjection& GetViewProjection() const { return viewProjection_; }
 
 private:
 	ViewProjection viewProjection_;
-	Vector3 targetOffset_ = {0, 0, -15.0f};
+	Vector3 targetOffset_ = {0, 0, -500.0f};
 	Vector3 targetPosition_; // 目標座標を追加
 };
