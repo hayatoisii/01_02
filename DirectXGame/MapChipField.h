@@ -7,8 +7,15 @@
 #include "WorldTransform.h"
 
 enum class MapChipType {
-	kBlank, // 空白
-	kBlock, // ブロック
+	kBlank,  // 空白
+	kBlock,  // ブロック
+	kWater,  // 水
+	kLava,   // 溶岩
+	kGrass,  // 草
+	kSand,   // 砂
+	kEnemy,  // 敵
+	kGoal,   // ゴール
+	kNewType // 新しいタイプ
 };
 
 struct MapChipData {
@@ -40,12 +47,11 @@ public:
 	IndexSet GetMapChipIndexSetByPosition(const Vector3& position);
 	Rect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
 
+	static inline const float kBlockWidth = 8.0f;  // 2
+	static inline const float kBlockHeight = 6.0f; // 2
+
 
 	private:
-
-			// 1ブロックのサイズ
-	    static inline const float kBlockWidth = 8.0f; // 2
-	    static inline const float kBlockHeight = 6.0f; // 2
 	    // ブロックの個数
 	    static inline const uint32_t kNumBlockVirtical = 20;
 	    static inline const uint32_t kNumBlockHorizontal = 100;

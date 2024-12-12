@@ -41,6 +41,17 @@ public: // メンバ関数
 	Model* modelSkydome_ = nullptr;
 	Model* modelParticles_ = nullptr;
 
+	Model* modelWater_ = nullptr;
+	Model* modelLava_ = nullptr;
+	Model* modelGrass_ = nullptr;
+	Model* modelSand_ = nullptr;
+	Model* modelEnemy1_ = nullptr;
+	Model* modelGoal_ = nullptr;
+	Model* modelNewType_ = nullptr; // 新しいモデル
+
+	float kBlockWidth;
+	float kBlockHeight;
+
 	Vector3 playerPos = {};
 
 	CameraController* cameraController_;

@@ -41,6 +41,9 @@ void GameScene::Initialize() {
 	worldTransform_.Initialize();
 	viewProjection_.Initialize();
 
+	kBlockWidth = mapChipField_->kBlockWidth;
+	kBlockHeight = mapChipField_->kBlockHeight;
+
 	// SkyDome作成
 	skydome = new Skydome;
 	// Mapの生成
@@ -53,8 +56,17 @@ void GameScene::Initialize() {
 	modelPlayer_ = Model::CreateFromOBJ("player", true);
 	modelEnemy_ = Model::CreateFromOBJ("enemy");
 	modelBlock_ = Model::CreateFromOBJ("cube123");
-	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
+	modelSkydome_ = Model::CreateFromOBJ("enemy", true);
 	modelParticles_ = Model::CreateFromOBJ("deathParticle", true);
+
+	modelWater_ = Model::CreateFromOBJ("kaminarikabe", true);//2
+	modelLava_ = Model::CreateFromOBJ("kaminariaitemu", true);//3
+	modelGrass_ = Model::CreateFromOBJ("bomu");//4
+	modelSand_ = Model::CreateFromOBJ("suraimu");//5
+	modelEnemy1_ = Model::CreateFromOBJ("enemy");//6
+	modelGoal_ = Model::CreateFromOBJ("go-ru");//7
+	modelNewType_ = Model::CreateFromOBJ("hito", true); // 8
+
 
 	// プレイヤーの初期位置の取得
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
@@ -103,9 +115,8 @@ void GameScene::GenerateBlocks() {
 
 	for (uint32_t i = 0; i < numBlockVirtical; ++i) {
 		for (uint32_t j = 0; j < numBlockHorizontal; ++j) {
-
-			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock) {
-
+			MapChipType chipType = mapChipField_->GetMapChipTypeByIndex(j, i);
+			if (chipType != MapChipType::kBlank) {
 				WorldTransform* worldTransform = new WorldTransform();
 				worldTransform->Initialize();
 				worldTransformBlocks_[i][j] = worldTransform;
@@ -167,7 +178,6 @@ void GameScene::Update() {
 }
 
 void GameScene::Draw() {
-
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
@@ -175,10 +185,7 @@ void GameScene::Draw() {
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
-	/// <summary>
-	/// ここに背景スプライトの描画処理を追加できる
-	/// </summary>
-	///
+	// ここに背景スプライトの描画処理を追加できる
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -190,10 +197,7 @@ void GameScene::Draw() {
 	// 3Dオブジェクト描画前処理
 	Model::PreDraw(commandList);
 
-	/// <summary>
-	/// ここに3Dオブジェクトの描画処理を追加できる
-	/// </summary>
-	///
+	// ここに3Dオブジェクトの描画処理を追加できる
 
 	// 自キャラ
 	player_->Draw();
@@ -207,11 +211,41 @@ void GameScene::Draw() {
 		dethParticles_->Draw();
 	}
 
-	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
-		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
+	for (uint32_t i = 0; i < worldTransformBlocks_.size(); ++i) {
+		for (uint32_t j = 0; j < worldTransformBlocks_[i].size(); ++j) {
+			WorldTransform* worldTransformBlock = worldTransformBlocks_[i][j];
 			if (!worldTransformBlock)
 				continue;
-			modelBlock_->Draw(*worldTransformBlock, viewProjection_);
+
+			MapChipType chipType = mapChipField_->GetMapChipTypeByIndex(j, i);
+			switch (chipType) {
+			case MapChipType::kBlock:
+				modelBlock_->Draw(*worldTransformBlock, viewProjection_);
+				break;
+			case MapChipType::kWater:
+				modelWater_->Draw(*worldTransformBlock, viewProjection_);
+				break;
+			case MapChipType::kLava:
+				modelLava_->Draw(*worldTransformBlock, viewProjection_);
+				break;
+			case MapChipType::kGrass:
+				modelGrass_->Draw(*worldTransformBlock, viewProjection_);
+				break;
+			case MapChipType::kSand:
+				modelSand_->Draw(*worldTransformBlock, viewProjection_);
+				break;
+			case MapChipType::kEnemy:
+				modelEnemy1_->Draw(*worldTransformBlock, viewProjection_);
+				break;
+			case MapChipType::kGoal:
+				modelGoal_->Draw(*worldTransformBlock, viewProjection_);
+				break;
+			case MapChipType::kNewType:
+				modelNewType_->Draw(*worldTransformBlock, viewProjection_);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -223,15 +257,13 @@ void GameScene::Draw() {
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
 
-	/// <summary>
-	/// ここに前景スプライトの描画処理を追加できる
-	/// </summary>
+	// ここに前景スプライトの描画処理を追加できる
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
-
 #pragma endregion
 }
+
 
 void GameScene::CheckAllCollisions() {
 
