@@ -76,4 +76,15 @@ MapChipType MapChipField::GetMapChipTypeByIndex(uint32_t xIndex, uint32_t yIndex
 	return mapChipData_.data[yIndex][xIndex];
 }
 
-Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) { return Vector3(kBlockWidth * xIndex, kBlockHeight * (kNumBlockVirtical - 1 - yIndex), 0); }
+Vector3 MapChipField::GetMapChipPositionByIndex(uint32_t xIndex, uint32_t yIndex) {
+	// マップ全体の幅と高さを計算
+	float mapWidth = kBlockWidth * kNumBlockHorizontal;
+	float mapHeight = kBlockHeight * kNumBlockVirtical;
+
+	// 左下を基準にオフセットを計算
+	float offsetX = -mapWidth / 2.0f;
+	float offsetY = -mapHeight / 2.0f;
+
+	// オフセットを適用して位置を計算
+	return Vector3(kBlockWidth * xIndex + offsetX, kBlockHeight * (kNumBlockVirtical - 1 - yIndex) + offsetY, 0);
+}
