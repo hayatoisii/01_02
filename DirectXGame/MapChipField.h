@@ -5,6 +5,7 @@
 #include "Vector3.h"
 #include "Viewprojection.h"
 #include "WorldTransform.h"
+#include <string> 
 
 enum class MapChipType {
 	kBlank, // 空白
@@ -39,13 +40,11 @@ public:
 
 	IndexSet GetMapChipIndexSetByPosition(const Vector3& position);
 	Rect GetRectByIndex(uint32_t xIndex, uint32_t yIndex);
-
+	static inline const float kBlockWidth = 1.0f;  // 2
+	static inline const float kBlockHeight = 1.0f; // 2
 
 	private:
 
-			// 1ブロックのサイズ
-	    static inline const float kBlockWidth = 1.0f; // 2
-	    static inline const float kBlockHeight = 1.0f; // 2
 	    // ブロックの個数
 	    static inline const uint32_t kNumBlockVirtical = 20;
 	    static inline const uint32_t kNumBlockHorizontal = 100;

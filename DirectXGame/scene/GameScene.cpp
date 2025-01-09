@@ -56,7 +56,7 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("sphere", true);
 
 	// プレイヤーの初期位置の取得
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(5, 18);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(8, 12);
 
 	// 敵の初期位置の取得
 	Vector3 enmyPosition = mapChipField_->GetMapChipPositionByIndex(20, 18);
